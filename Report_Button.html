@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Print Abstract of Bids</title>
+  <script src="https://js.arcgis.com/4.20/"></script>
+  <script>
+    function executeGeoprocessing() {
+      var outputFileUrl;
+      var params = {};
+      var urlParams = new URLSearchParams(window.location.search);
+      params.contract = urlParams.get('contract');
+      const url = urlParams.get('url');
+
+      require([
+        "esri/tasks/Geoprocessor",
+        "esri/rest/support/JobInfo"
+      ], function(Geoprocessor, JobInfo) {
+        var gp = new Geoprocessor(url);
+        gp.submitJob(params).then((jobInfo) => {
+          const jobid = jobInfo.jobId;
+          console.log("ArcGIS Server job ID: ", jobid);
+
+          const options = {
+            interval: 1500,
+            statusCallback: (j) => {
+              console.log("Job Status: ", j.jobStatus);
+            }
+          };
+
+          jobInfo.waitForJobCompletion(options).then(() => {
+            jobInfo.fetchResultData('outfile').then(function(result){
+              outputFileUrl = result.value.url;
+              window.open(outputFileUrl, "_blank");
+            });
+          });
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var link = document.getElementById("run-geoprocessing-tool");
+      link.addEventListener("click", function(event) {
+        event.preventDefault();
+        executeGeoprocessing();
+      });
+    });
+  </script>
+</head>
+<style>
+  #run-geoprocessing-tool {
+    display: inline-block;
+    background-color: #56f8ad;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+
+<body>
+  <div class="button-container">
+    <a href="#" id="run-geoprocessing-tool">Print Abstract</a>
+  </div>
+</body>
+</html>
