@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task List with Checkboxes</title>
+    <style>
+        #listContainer {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #listContainer .taskType {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        #listContainer .taskItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        
+        #listContainer .taskItem .taskDetails {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="listContainer"></div>
+
+    <script>
+        window.onload = function() {
+            fetch('https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson')
+                .then(response => response.json())
+                .then(data => {
+                    let listContainer = document.getElementById('listContainer');
+
+                    let tasksByType = {};
+                    for (let feature of data.features) {
+                        let taskType = feature.attributes.tasktype;
+                        if (!tasksByType[taskType]) {
+                            tasksByType[taskType] = [];
+                        }
+                        tasksByType[taskType].push(feature);
+                    }
+
+                    for (let taskType in tasksByType) {
+                        let taskTypeHeader = document.createElement('h2');
+                        taskTypeHeader.textContent = taskType;
+                        taskTypeHeader.classList.add('taskType');
+                        listContainer.appendChild(taskTypeHeader);
+
+                        for (let feature of tasksByType[taskType]) {
+                            let checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.checked = feature.attributes.taskdatecomplete !== null;
+
+                            checkbox.onchange = function() {
+                                if (checkbox.checked) {
+                                    fetch('https://yourapi.com/endpoint/' + feature.attributes.objectid, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            taskdatecomplete: new Date().toISOString()
+                                        })
+                                    });
+                                }
+                            };
+
+                            let detailsDiv = document.createElement('div');
+                            detailsDiv.classList.add('taskDetails');
+                            detailsDiv.textContent = feature.attributes.taskid + "- " + feature.attributes.taskdescription;
+
+                            let taskItemDiv = document.createElement('div');
+                            taskItemDiv.classList.add('taskItem');
+                            taskItemDiv.appendChild(detailsDiv);
+                            taskItemDiv.appendChild(checkbox);
+
+                            listContainer.appendChild(taskItemDiv);
+                        }
+                    }
+                });
+        };
+    </script>
+</body>
+
+</html>
