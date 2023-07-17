@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Task List with Checkboxes</title>
     <style>
         #listContainer {
@@ -28,16 +29,38 @@
             flex-grow: 1;
         }
     </style>
-</head>
-
-<body>
-    <div id="listContainer"></div>
-
+    <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.21/"></script>
     <script>
-        window.onload = function() {
-            fetch('https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson')
-                .then(response => response.json())
-                .then(data => {
+        require([
+            "esri/identity/IdentityManager",
+            "esri/request",
+            "dojo/domReady!"
+        ], function(IdentityManager, esriRequest) {
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson", {
+                responseType: "json"
+            }).then(function(response) {
+                // User is already signed in
+                loadData(response.data);
+            }).catch(function(error) {
+                // Error occurred (possibly because the user is not signed in)
+                IdentityManager.getCredential("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson")
+                    .then(function(credential) {
+                        // Try to load the data again
+                        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson", {
+                            responseType: "json"
+                        }).then(function(response) {
+                            loadData(response.data);
+                        });
+                    });
+            });
+
+            function loadData(data) {
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/10/query?where=1=1&outFields=*&f=pjson", {
+                    responseType: "json"
+                }).then(function(response) {
+                    let data = response.data;
+
                     let listContainer = document.getElementById('listContainer');
 
                     let tasksByType = {};
@@ -62,8 +85,8 @@
 
                             checkbox.onchange = function() {
                                 if (checkbox.checked) {
-                                    fetch('https://yourapi.com/endpoint/' + feature.attributes.objectid, {
-                                        method: 'PUT',
+                                    esriRequest('https://yourapi.com/endpoint/' + feature.attributes.objectid, {
+                                        method: 'put',
                                         headers: {
                                             'Content-Type': 'application/json',
                                         },
@@ -87,8 +110,14 @@
                         }
                     }
                 });
-        };
+            }
+
+        });
     </script>
+</head>
+
+<body>
+    <div id="listContainer"></div>
 </body>
 
 </html>
