@@ -4,6 +4,12 @@
 <head>
     <title>Data Input</title>
     <style>
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+        }
+        
         .grid-container {
             display: grid;
             grid-template-columns: auto auto auto auto;
@@ -16,105 +22,167 @@
             text-align: center;
         }
     </style>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
 
 </head>
 
 <body>
-
-
-
-    <script>
-        // Fetch the data when the document is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            axios.get('https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/2/query?where=1=1&outFields=*&f=pjson')
-                .then(response => {
-                    const destinationSelect = document.getElementById('destination');
-
-                    // Clear any existing options
-                    destinationSelect.innerHTML = '';
-
-                    // Sort the features
-                    const sortedFeatures = response.data.features.sort((a, b) => {
-                        if (a.attributes.contactbusinessname < b.attributes.contactbusinessname) return -1;
-                        if (a.attributes.contactbusinessname > b.attributes.contactbusinessname) return 1;
-                        return 0;
-                    });
-
-                    // Iterate through each feature in the response
-                    sortedFeatures.forEach(feature => {
-                        const option = document.createElement('option');
-                        option.value = feature.attributes.contactbusinessname;
-                        option.textContent = feature.attributes.contactbusinessname;
-
-                        // Append the new option to the select
-                        destinationSelect.appendChild(option);
-                    });
-
-                    // Convert the select box into a searchable select box with Select2
-                    $(destinationSelect).select2({
-                        width: 'resolve' // need to override the changed width by Select2
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-
-        document.getElementById('dataForm').addEventListener('submit', function(event) {
-            // Prevent the default form submit action
-            event.preventDefault();
-
-            // Get values from the form
-            const certificate = document.getElementById('certificate').value;
-            const destination = document.getElementById('destination').value;
-            const loads = document.getElementById('loads').value;
-            const acres = document.getElementById('acres').value;
-            const sawlog = document.getElementById('sawlog').value;
-            const utility = document.getElementById('utility').value;
-
-            // Create an object to send to the endpoint
-            const dataToSend = {
-                certificate: certificate,
-                destination: destination,
-                loads: loads,
-                acres: acres,
-                sawlog: sawlog,
-                utility: utility
-            };
-
-            // Use Axios to send a POST request to your REST endpoint
-            axios.post('http://your-endpoint-url.com', dataToSend)
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
     <form id="dataForm">
         <div class="form-group">
-            <label for="certificate">Bidder Number:<input type="text" id="certificate" name="certificate"></label>
-
-            <label for="destination">Bidder Name:
-                <select id="destination" name="destination">
+            <br>
+            <label for="biddername">
+                Bidder Name:
+                <select id="biddername" name="biddername">
                     <option value="destination1">Loading Contacts</option>
                 </select>
             </label>
         </div>
         <div class="form-group">
-            <label for="loads">Bid Unit:<input type="number" id="loads" name="loads"></label>
-            <label for="acres">Bid Deposit:<input type="number" id="acres" name="acres"></label>
-            <label for="sawlog">Total Offer:<input type="number" id="sawlog" name="sawlog"></label>
-            <label for="utility">Highest to Lower Bidder No:<input type="number" id="utility" name="utility"></label>
+            <label for="loads">
+                <label for="bidderaddress">
+                    Bidder Address:
+                    <input type="text" id="bidderaddress" name="bidderaddress">
+                </label> Bid Unit:
+            <input type="number" id="bidunit" name="bidunit">
+            </label>
+            <br>
+            <label for="acres">
+                Bid Deposit:
+                <input type="number" id="biddeposit" name="biddeposit">
+            </label>
+            <br>
+            <label for="sawlog">
+                Total Offer:
+                <input type="number" id="totaloffer" name="totaloffer">
+            </label>
+            <br>
+            <label for="utility">
+                Highest to Lower Bidder No:
+                <input type="number" id="htolno" name="htolno">
+            </label>
         </div>
         <input type="submit" value="Submit">
     </form>
-</body>
 
-</html>
+
+    <script>
+        let selectedAddress = ''; // Move this line here
+        let featureMap = new Map();
+        var urlParams = new URLSearchParams(window.location.search);
+        var cid = urlParams.get('cid');
+        var pgid = urlParams.get('pgid');
+
+        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function(IdentityManager, esriRequest) {
+            // Fetch the data when the document is ready
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/2/query", {
+                responseType: "json",
+                query: {
+                    where: "1=1",
+                    outFields: "contactbusinessname, contactstreet1",
+                    f: "json"
+                }
+
+            }).then(function(response) {
+                const bidderSelect = document.getElementById('biddername');
+
+                bidderSelect.innerHTML = '';
+
+                // Sort and iterate through features
+                const sortedFeatures = response.data.features.sort((a, b) => {
+                    if (a.attributes.contactbusinessname < b.attributes.contactbusinessname) return -1;
+                    if (a.attributes.contactbusinessname > b.attributes.contactbusinessname) return 1;
+                    return 0;
+                });
+                sortedFeatures.forEach(feature => {
+                    const option = document.createElement('option');
+                    option.value = feature.attributes.contactbusinessname;
+                    option.textContent = feature.attributes.contactbusinessname;
+
+                    // Store the feature in the map
+                    featureMap.set(option.value, feature);
+
+                    // Append the new option to the select
+                    bidderSelect.appendChild(option);
+                });
+
+                document.getElementById('biddername').addEventListener('change', function(e) {
+                    // Get the feature from the map using the selected value
+                    const selectedFeature = featureMap.get(e.target.value);
+
+                    if (selectedFeature) {
+                        selectedAddress = selectedFeature.attributes.contactstreet1;
+                        document.getElementById('bidderaddress').value = selectedAddress;
+                        console.log('Selected Address:', selectedAddress);
+                    }
+                });
+
+
+
+                // Convert the select box into a searchable select box with Select2
+                $(bidderSelect).select2({
+                    width: 'resolve' // need to override the changed width by Select2
+                }).on('select2:select', function(e) {
+                    // Get the feature from the map using the selected value
+                    const selectedFeature = featureMap.get(e.target.value);
+
+                    if (selectedFeature) {
+                        selectedAddress = selectedFeature.attributes.contactstreet1;
+                        document.getElementById('bidderaddress').value = selectedAddress;
+                        console.log('Selected Address:', selectedAddress);
+                    }
+                });
+            }).catch(function(error) {
+                console.error(error);
+            });
+
+            document.getElementById('dataForm').addEventListener('submit', function(event) {
+                // Prevent the default form submit action
+                event.preventDefault();
+
+                // Get values from the form
+                const bname = document.getElementById('biddername').value;
+                const baddress = document.getElementById('bidderaddress').value;
+                const unit = parseInt(document.getElementById('bidunit').value);
+                const deposit = parseInt(document.getElementById('biddeposit').value);
+                const total = parseInt(document.getElementById('totaloffer').value);
+                const htol = parseInt(document.getElementById('htolno').value);
+
+                // Create features array
+                const features = [{
+                    "attributes": {
+                        "abscontractno": cid,
+                        "biddername": bname,
+                        "bidderaddress": baddress,
+                        "abstractunitbid": unit,
+                        "abstractbiddeposit": deposit,
+                        "abstracttotaloffer": total,
+                        "abstracthighesttolowestbidno": htol,
+                        "parentglobalid": pgid
+                    }
+                }];
+
+                // Convert features to URL-encoded string
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                console.log(features);
+                // Send a POST request to your REST endpoint
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/8/addFeatures", {
+                    method: "post",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function(response) {
+                    console.log(response.data);
+                }).catch(function(error) {
+                    console.error(error);
+                });
+            });
+        });
+    </script>
+    </body
