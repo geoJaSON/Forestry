@@ -10,16 +10,20 @@
             width: 100%;
         }
         
-        .grid-container {
+        .form-group {
             display: grid;
-            grid-template-columns: auto auto auto auto;
-            padding: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            align-items: center;
         }
         
-        .grid-item {
-            padding: 20px;
-            font-size: 30px;
-            text-align: center;
+        label {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .submit-btn {
+            grid-column: span 2;
         }
     </style>
 
@@ -33,39 +37,34 @@
 <body>
     <form id="dataForm">
         <div class="form-group">
-            <br>
             <label for="biddername">
-                Bidder Name:
                 <select id="biddername" name="biddername">
+
                     <option value="destination1">Loading Contacts</option>
+                    <option value=" " disabled selected>Species</option>
                 </select>
             </label>
+
+            <label for="bidderaddress">
+                <input type="text" id="bidderaddress" name="bidderaddress" placeholder="Bidder Address">
+            </label>
+
+            <label for="bidunit">
+                <input type="number" id="bidunit" name="bidunit" placeholder="Bid Unit">
+            </label>
+
+            <label for="biddeposit">
+                <input type="number" id="biddeposit" name="biddeposit" placeholder="Bid Deposit">
+            </label>
+
+            <label for="totaloffer">
+                <input type="number" id="totaloffer" name="totaloffer" placeholder="Total Offer">
+            </label>
+
         </div>
-        <div class="form-group">
-            <label for="loads">
-                <label for="bidderaddress">
-                    Bidder Address:
-                    <input type="text" id="bidderaddress" name="bidderaddress">
-                </label> Bid Unit:
-            <input type="number" id="bidunit" name="bidunit">
-            </label>
-            <br>
-            <label for="acres">
-                Bid Deposit:
-                <input type="number" id="biddeposit" name="biddeposit">
-            </label>
-            <br>
-            <label for="sawlog">
-                Total Offer:
-                <input type="number" id="totaloffer" name="totaloffer">
-            </label>
-            <br>
-            <label for="utility">
-                Highest to Lower Bidder No:
-                <input type="number" id="htolno" name="htolno">
-            </label>
+        <div class="submit-btn">
+            <input type="submit" value="Submit New Bid">
         </div>
-        <input type="submit" value="Submit">
     </form>
 
 
@@ -78,11 +77,11 @@
 
         require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function(IdentityManager, esriRequest) {
             // Fetch the data when the document is ready
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/2/query", {
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
                 responseType: "json",
                 query: {
                     where: "1=1",
-                    outFields: "contactbusinessname, contactstreet1",
+                    outFields: "ContactBusinessName, ContactStreet1",
                     f: "json"
                 }
 
@@ -93,14 +92,14 @@
 
                 // Sort and iterate through features
                 const sortedFeatures = response.data.features.sort((a, b) => {
-                    if (a.attributes.contactbusinessname < b.attributes.contactbusinessname) return -1;
-                    if (a.attributes.contactbusinessname > b.attributes.contactbusinessname) return 1;
+                    if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
+                    if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
                     return 0;
                 });
                 sortedFeatures.forEach(feature => {
                     const option = document.createElement('option');
-                    option.value = feature.attributes.contactbusinessname;
-                    option.textContent = feature.attributes.contactbusinessname;
+                    option.value = feature.attributes.ContactBusinessName;
+                    option.textContent = feature.attributes.ContactBusinessName;
 
                     // Store the feature in the map
                     featureMap.set(option.value, feature);
@@ -114,7 +113,7 @@
                     const selectedFeature = featureMap.get(e.target.value);
 
                     if (selectedFeature) {
-                        selectedAddress = selectedFeature.attributes.contactstreet1;
+                        selectedAddress = selectedFeature.attributes.ContactStreet1;
                         document.getElementById('bidderaddress').value = selectedAddress;
                         console.log('Selected Address:', selectedAddress);
                     }
@@ -130,7 +129,7 @@
                     const selectedFeature = featureMap.get(e.target.value);
 
                     if (selectedFeature) {
-                        selectedAddress = selectedFeature.attributes.contactstreet1;
+                        selectedAddress = selectedFeature.attributes.ContactStreet1;
                         document.getElementById('bidderaddress').value = selectedAddress;
                         console.log('Selected Address:', selectedAddress);
                     }
@@ -157,10 +156,10 @@
                         "abscontractno": cid,
                         "biddername": bname,
                         "bidderaddress": baddress,
-                        "abstractunitbid": unit,
-                        "abstractbiddeposit": deposit,
-                        "abstracttotaloffer": total,
-                        "abstracthighesttolowestbidno": htol,
+                        "unitbid": unit,
+                        "biddeposit": deposit,
+                        "totaloffer": total,
+                        "AbsListNo": bidrank,
                         "parentglobalid": pgid
                     }
                 }];
@@ -171,7 +170,7 @@
                 formData.append('features', JSON.stringify(features));
                 console.log(features);
                 // Send a POST request to your REST endpoint
-                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Hosted/NWS_Forestry_Database/FeatureServer/8/addFeatures", {
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/addFeatures", {
                     method: "post",
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
