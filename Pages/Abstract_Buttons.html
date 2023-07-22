@@ -57,16 +57,28 @@
 <style>
     .run-geoprocessing-tool {
         display: inline-block;
-        background-color: #56f8ad;
+        background-color: #12834e;
         color: black;
-        padding: 10px 20px;
+        padding: 5px 10px;
         text-align: center;
         text-decoration: none;
         font-size: 14px;
         margin: 4px 2px;
         cursor: pointer;
         border: none;
-        border-radius: 12px;
+        border: 1px solid black;
+        /* Added black border */
+        transition: font-weight 0.3s;
+        /* Added transition for font-weight */
+    }
+    
+    .run-geoprocessing-tool:hover {
+        border: 2px solid black;
+        /* Font goes bold on hover */
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
     }
     
     .button-container {
@@ -79,9 +91,10 @@
     <div class="button-container">
         <a href="#" id="run-geoprocessing-tool-1" class="run-geoprocessing-tool">Abstract (Scaled)</a>
         <a href="#" id="run-geoprocessing-tool-2" class="run-geoprocessing-tool">Abstract (Lump Sum)</a>
-        <a href="#" id="run-geoprocessing-tool-2" class="run-geoprocessing-tool">Check Return Letter</a>
-        <a href="#" id="run-geoprocessing-tool-2" class="run-geoprocessing-tool">No Bids Returned Statement</a>
+        <a href="#" id="run-geoprocessing-tool-3" class="run-geoprocessing-tool">Check Return Letter</a>
+        <a href="#" id="run-geoprocessing-tool-4" class="run-geoprocessing-tool">No Bids Returned Statement</a>
     </div>
 </body>
+
 
 </html>
