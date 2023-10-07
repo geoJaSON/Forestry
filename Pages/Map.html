@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.21/"></script>
+    <style>
+        html, body, #viewDiv {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+    <div id="viewDiv">
+    </div>
+</body>
+<script>
+    require([
+        "esri/config",
+        "esri/Map",
+        "esri/WebMap",
+        "esri/views/MapView",
+        "esri/identity/IdentityManager",
+        "esri/request",
+    ], (esriConfig, Map, WebMap, MapView, IdentityManager, esriRequest) => {
+        esriConfig.portalUrl = "https://arcportal-ucop-corps.usace.army.mil/s0portal";
+        esriConfig.request.trustedServers.push("https://arcportal-ucop-corps.usace.army.mil/s0portal");
+
+
+        const webmap = new WebMap({
+            portalItem: {
+                id: "4fdc7cba8a964fa4934cd28766ad7d76"
+            }
+        });
+
+        view = new MapView({
+            container: "viewDiv",
+            map: webmap,
+        });
+    })
+
+</script>
+</html>

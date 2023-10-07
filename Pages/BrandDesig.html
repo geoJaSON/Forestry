@@ -3,209 +3,311 @@
 
 <head>
     <title>Data Input</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
     <style>
         input[type="text"],
         input[type="number"],
         select {
             width: 100%;
         }
-        
-        .form-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            align-items: center;
-        }
-        
-        .form-group2 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            align-items: center;
-        }
-        
-        label {
-            display: flex;
-            flex-direction: column;
-        }
-        
+
+
         .submit-btn {
-            grid-column: span 2;
+            display: flex;
+            justify-content: center;
+
         }
-        
-        .form-group2 label {
-            grid-column: span 1;
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            /* Change the font size to your desired value */
-            /* Standard sans-serif font family */
-            /* Each label spans one grid column */
+
+        .pdf-btn {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            /* width: 20%; */
+            font-size: 11px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
         }
-        
-        .form-group2 input {
-            grid-column: span 1;
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            /* Standard sans-serif font family */
-            /* Each input field spans one grid column */
+
+        .submit-btn input {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            width: 20%;
+            font-size: 15px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .pdf-btn:hover {
+            background-color: #36387c;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+        }
+
+        .submit-btn input:hover {
+            background-color: #36387c;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
         }
     </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-    <script src="https://js.arcgis.com/4.21/"></script>
-
 </head>
 
 <body>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>
+                Brand Designation
+            </h4>
+        </div>
+    </div>
+    <div class="button-container">
+        <button type="button" id="bdbs" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank)
+            (Scaled)</button>
+        <button type="button" id="bdbls" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank) (Lump
+            Sum)</button>
+        <button type="button" id="bdbtwp" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank) (Ton
+            Wood-Pulp)</button>
+        <button type="button" id="bddb" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Destinations and
+            Bureaus)</button>
+    </div>
+
+    <div class="button-container">
+        <button type="button" id="dpfb" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form
+            (Blank)</button>
+        <button type="button" id="dpfdn" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form (with
+            Destination Names)</button>
+        <button type="button" id="ldpd" class="btn btn-secondary btn-sm pdf-btn">Letter (Domestic Processing to
+            Destinations)</button>
+        <button type="button" id="mcfb" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form
+            (Blank)</button>
+        <button type="button" id="mcfdn" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form (with
+            Destination Names)</button>
+        <button type="button" id="lmcd" class="btn btn-secondary btn-sm pdf-btn">Letter (Metal Contamination to
+            Destinations)</button>
+    </div>
+    <div id="brandtable"></div>
+    <hr>
+
     <form id="dataForm">
+        <!-- Group 1: Dropdowns and Text Inputs -->
         <div class="form-group">
-            <select id="sawmill" name="sawmill">
-
-                    <option value="destination1">Loading Contacts</option>
-                </select>
-
-            <input type="text" id="bureau" name="bureau" placeholder="Scaling Bureau">
-            <input type="text" id="locat" name="locat" placeholder="Scale Location">
-
+            <select class="form-select" id="sawmill" name="sawmill">
+                <option value="destination1">Loading Contacts</option>
+            </select>
+            <input class="form-control" type="text" id="bureau" name="bureau" placeholder="Scaling Bureau">
+            <input class="form-control" type="text" id="locat" name="locat" placeholder="Scale Location">
         </div>
 
+        <!-- Group 2: Labels and Date Inputs -->
         <div class="form-group2">
             <label for="domsent">Domestic Date Sent:</label>
-            <input type="date" id="domsent" name="domsent" placeholder="Domestic Date Sent">
-
+            <input class="form-control" type="date" id="domsent" name="domsent" placeholder="Domestic Date Sent">
             <label for="domrec">Domestic Date Received:</label>
-            <input type="date" id="domrec" name="domrec" placeholder="Domestic Date Received">
-
+            <input class="form-control" type="date" id="domrec" name="domrec" placeholder="Domestic Date Received">
             <label for="metsent">Metal Con Date Sent:</label>
-            <input type="date" id="metsent" name="metsent" placeholder="Metal Con Date Sent">
-
+            <input class="form-control" type="date" id="metsent" name="metsent" placeholder="Metal Con Date Sent">
             <label for="metrec">Metal Con Date Received:</label>
-            <input type="date" id="metrec" name="metrec" placeholder="Metal Con Date Received">
+            <input class="form-control" type="date" id="metrec" name="metrec" placeholder="Metal Con Date Received">
         </div>
+
+        <!-- Submit Button -->
         <div class="submit-btn">
             <input type="submit" value="Submit New Bid">
         </div>
     </form>
+</body>
+<script>
+    let selectedBureau = ''; // Move this line here
+    let featureMap = new Map();
 
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/12/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
+            }
+        }).then(function (response) {
+            // Extract data
+            var tableData = response.data.features.map(function (feature) {
+                return feature.attributes;
+            });
 
-    <script>
-        let selectedBureau = ''; // Move this line here
-        let featureMap = new Map();
-        var urlParams = new URLSearchParams(window.location.search);
-        var cid = urlParams.get('cid');
-        var pgid = urlParams.get('pgid');
+            // Define table
+            var table = new Tabulator("#brandtable", {
+                data: tableData, //assign data to table
+                columns: [
+                    { title: "scaleContractNo", field: "scaleContractNo", headerFilter: "input", visible: false },
+                    { title: "SawmillDestination", field: "SawmillDestination", editor: "input" },
+                    { title: "ScalingBureau", field: "ScalingBureau", editor: "input" },
+                    { title: "ScaleLocation", field: "ScaleLocation", editor: "input" },
+                    { title: "DomesticDateSent", field: "DomesticDateSent", editor: "input" },
+                    { title: "DomesticDateRecieved", field: "DomesticDateRecieved", editor: "input" },
+                    { title: "MetalConDateSent", field: "MetalConDateSent", editor: "input" },
+                    { title: "MetalConDateRecieved", field: "MetalConDateRecieved" },
+                    { title: "ObjectID", field: "OBJECTID", visible: false },
+                ]
+            });
+            table.on("cellEdited", function (cell) {
+                var field = cell.getField(); // get field name
+                var value = cell.getValue(); // get current cell value
+                var row = cell.getRow().getData(); // get the data for the row
+                var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
+                handleEdit(field, value, objectId);
+            });
+        })
+    });
 
-        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function(IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
-                responseType: "json",
-                query: {
-                    where: "ContactType LIKE '%Sawmill%'",
-                    outFields: "ContactBusinessName, ScalingBureauName, ScaleLocation",
-                    f: "json"
+    function handleEdit(field, value, objectId) {
+        console.log("Updated: ", field, value, objectId);
+    }
+
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
+            responseType: "json",
+            query: {
+                where: "ContactType LIKE '%Sawmill%'",
+                outFields: "ContactBusinessName, ScalingBureauName, ScaleLocation",
+                f: "json"
+            }
+
+        }).then(function (response) {
+            const sawmillSelect = document.getElementById('sawmill');
+
+            sawmillSelect.innerHTML = '';
+
+            // Sort and iterate through features
+            const sortedFeatures = response.data.features.sort((a, b) => {
+                if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
+                if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
+                return 0;
+            });
+            sortedFeatures.forEach(feature => {
+                const option = document.createElement('option');
+                option.value = feature.attributes.ContactBusinessName;
+                option.textContent = feature.attributes.ContactBusinessName;
+
+                // Store the feature in the map
+                featureMap.set(option.value, feature);
+
+                // Append the new option to the select
+                sawmillSelect.appendChild(option);
+            });
+
+            document.getElementById('sawmill').addEventListener('change', function (e) {
+                // Get the feature from the map using the selected value
+                const selectedFeature = featureMap.get(e.target.value);
+
+                if (selectedFeature) {
+                    selectedBureau = selectedFeature.attributes.ScalingBureauName;
+                    selectedLoc = selectedFeature.attributes.ScaleLocation;
+                    document.getElementById('bureau').value = selectedBureau;
+                    document.getElementById('locat').value = selectedLoc;
                 }
+            });
 
-            }).then(function(response) {
-                const sawmillSelect = document.getElementById('sawmill');
+            // Convert the select box into a searchable select box with Select2
+            $(sawmillSelect).select2({
+                width: 'resolve' // need to override the changed width by Select2
+            }).on('select2:select', function (e) {
+                // Get the feature from the map using the selected value
+                const selectedFeature = featureMap.get(e.target.value);
 
-                sawmillSelect.innerHTML = '';
+                if (selectedFeature) {
+                    selectedBureau = selectedFeature.attributes.ScalingBureauName;
+                    selectedLoc = selectedFeature.attributes.ScaleLocation;
+                    document.getElementById('bureau').value = selectedBureau;
+                    document.getElementById('locat').value = selectedLoc;
+                }
+            });
+        }).catch(function (error) {
+            console.error(error);
+        });
 
-                // Sort and iterate through features
-                const sortedFeatures = response.data.features.sort((a, b) => {
-                    if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
-                    if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
-                    return 0;
-                });
-                sortedFeatures.forEach(feature => {
-                    const option = document.createElement('option');
-                    option.value = feature.attributes.ContactBusinessName;
-                    option.textContent = feature.attributes.ContactBusinessName;
+        document.getElementById('dataForm').addEventListener('submit', function (event) {
+            // Prevent the default form submit action
+            event.preventDefault();
 
-                    // Store the feature in the map
-                    featureMap.set(option.value, feature);
+            // Get values from the form
+            const saw = document.getElementById('sawmill').value;
+            const bur = document.getElementById('bureau').value;
+            const loc = (document.getElementById('locat').value);
+            const domsent = Date.parse(document.getElementById('domsent').value);
+            const domrec = Date.parse(document.getElementById('domrec').value);
+            const metsent = Date.parse(document.getElementById('metsent').value);
+            const metrec = Date.parse(document.getElementById('metrec').value);
 
-                    // Append the new option to the select
-                    sawmillSelect.appendChild(option);
-                });
+            // Create features array
+            const features = [{
+                "attributes": {
+                    "scaleContractNo": cid,
+                    "SawmillDestination": saw,
+                    "ScalingBureau": bur,
+                    "ScaleLocation": loc,
+                    "DomesticDateSent": domsent,
+                    "DomesticDateRecieved": domrec,
+                    "MetalConDateSent": metsent,
+                    "MetalConDateRecieved": metrec,
+                    "parentglobalid": pgid
+                }
+            }];
 
-                document.getElementById('sawmill').addEventListener('change', function(e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
-
-                    if (selectedFeature) {
-                        selectedBureau = selectedFeature.attributes.ScalingBureauName;
-                        document.getElementById('bureau').value = selectedBureau;
-                        console.log('Selected Address:', selectedBureau);
-                    }
-                });
-
-
-
-                // Convert the select box into a searchable select box with Select2
-                $(sawmillSelect).select2({
-                    width: 'resolve' // need to override the changed width by Select2
-                }).on('select2:select', function(e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
-
-                    if (selectedFeature) {
-                        selectedBureau = selectedFeature.attributes.ScalingBureauName;
-                        document.getElementById('bureau').value = selectedBureau;
-                        console.log('Selected Address:', selectedBureau);
-                    }
-                });
-            }).catch(function(error) {
+            // Convert features to URL-encoded string
+            const formData = new URLSearchParams();
+            formData.append('f', 'json');
+            formData.append('features', JSON.stringify(features));
+            console.log(features);
+            // Send a POST request to your REST endpoint
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/12/addFeatures", {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
                 console.error(error);
             });
-
-            document.getElementById('dataForm').addEventListener('submit', function(event) {
-                // Prevent the default form submit action
-                event.preventDefault();
-
-                // Get values from the form
-                const saw = document.getElementById('sawmill').value;
-                const bur = document.getElementById('bureau').value;
-                const loc = parseInt(document.getElementById('locat').value);
-                const domsent = parseInt(document.getElementById('domsent').value);
-                const domrec = parseInt(document.getElementById('domrec').value);
-                const metsent = parseInt(document.getElementById('metsent').value);
-                const metrec = parseInt(document.getElementById('metrec').value);
-
-                // Create features array
-                const features = [{
-                    "attributes": {
-                        "scaleContractNo": cid,
-                        "scaleContractNo": saw,
-                        "biddername": bur,
-                        "ScalingsawmillNo": loc,
-                        "unitbid": domsent,
-                        "biddeposit": domrec,
-                        "totaloffer": metsent,
-                        "AbsListNo": metrec,
-                        "parentglobalid": pgid
-                    }
-                }];
-
-                // Convert features to URL-encoded string
-                const formData = new URLSearchParams();
-                formData.append('f', 'json');
-                formData.append('features', JSON.stringify(features));
-                console.log(features);
-                // Send a POST request to your REST endpoint
-                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/addFeatures", {
-                    method: "post",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData.toString()
-                }).then(function(response) {
-                    console.log(response.data);
-                }).catch(function(error) {
-                    console.error(error);
-                });
-            });
         });
-    </script>
-    </body
+    });
+</script>
+
+</html>

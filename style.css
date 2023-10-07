@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.vertical-nav {
+    width: 200px;
+    height: 100vh;
+    background: url('forest.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: auto; /* Enable scroll within the iframe */
+}
+.logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 5px;
+    justify-content: center;
+
+    align-items: center; /* Center horizontally */
+
+}
+
+.navbar-top-part {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    
+}
+
+.navbar-middle-part {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.navbar-brand {
+    color: rgb(255, 255, 255) !important;
+}
+.navbar, .navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important;
+    background-color: transparent !important;
+}
+.navbar-nav {
+    align-items: center;
+}
+.navbar-brand {
+    align-items: center;
+    justify-content: center;
+
+}
+.navbar-nav .nav-item {
+    background-color: #00904fb1;
+    border: 1px solid white; /* Adjust border size as per requirement */
+    border-radius: 15px; /* Adjust radius as per requirement */
+    margin: 2px 0;
+    width: 120%; 
+    height: 25px; /* Change the value as per your requirements */
+
+    
+}
+.navbar-nav .nav-link {
+    padding-left: 0; /* Remove horizontal padding */
+    padding-right: 0; /* Remove horizontal padding */
+    text-align: center; /* Center the text, if that's what you're looking for */
+    font-size: 12px;
+    padding-top: 2px; /* Adjust as per your requirements */
+    padding-bottom: 0px; /* Adjust as per your requirements */
+
+}
+fieldset, legend {
+    all: revert;
+ }
+ #content {
+    padding-left: 200px;
+    height: 100%;
+}
+.header {
+    background-image: url('camo.jpg'); /* Replace with your image path */
+    background-size: cover;   /* Cover the entirety of the header div */
+    background-position: center; /* Center the background image */
+    color: white;  /* Text color */
+    text-align: center;  /* Centering text horizontally */
+    padding: 20px; /* Padding inside the header */
+}
+
+h1 {
+    font-size: 2em;  /* Font size */
+}

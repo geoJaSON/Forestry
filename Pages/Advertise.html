@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Advertise</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
+
+</head>
+<style>
+    body {
+        padding: 20px;
+        background-color: #f2f2f2;
+        font-family: Arial, sans-serif;
+    }
+
+    .editor-container {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        border-radius: 15px;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #message {
+        margin-top: 20px;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .pdf-btn {
+        background-color: #00904fb1;
+        border: 1px solid white;
+        /* Adjust border size as per requirement */
+        border-radius: 50px;
+        /* Adjust radius as per requirement */
+        /* width: 20%; */
+        font-size: 11px;
+        color: white !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* Adds space between items */
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+
+    .submit-btn input {
+        background-color: #00904fb1;
+        border: 1px solid white;
+        /* Adjust border size as per requirement */
+        border-radius: 50px;
+        /* Adjust radius as per requirement */
+        width: 20%;
+        font-size: 15px;
+        color: white !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* Adds space between items */
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+
+    .pdf-btn:hover{        
+        background-color: #36387c;
+        transform: scale(1.1);
+        /* Image will zoom in slightly when hovered over */
+        border: 2px solid #fff;}
+    .submit-btn input:hover {
+        background-color: #36387c;
+        transform: scale(1.1);
+        /* Image will zoom in slightly when hovered over */
+        border: 2px solid #fff;
+        /* Add a border on hover */
+    }
+
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<body>
+    <div class="button-container">
+        <button type="button" id="memo" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo</button>
+        <button type="button" id="memo2" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo (Review
+            #2)</button>
+        <button type="button" id="memoamend" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo
+            (Amendment)</button>
+        <button type="button" id="cover" class="btn btn-secondary btn-sm pdf-btn">Amendment Cover Letter</button>
+        <button type="button" id="reco" class="btn btn-secondary btn-sm pdf-btn">RECO Approval Memo</button>
+    </div>
+    <div class="container">
+        <div class="editor-container col-md-8 offset-md-2">
+            <h4>PW Review #/ Amendment Comments / Changes</h4>
+            <textarea id="editor" class="form-control" style="height: 300px;"></textarea>
+            <div id="message"></div>
+        </div>
+        <div class="submit-btn">
+            <input type="submit" value="Submit New Comment">
+        </div>
+    </div>
+
+
+    <div id="message"></div>
+</body>
+
+<script>
+    // Replace with your REST API URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const gid = urlParams.get('gid'); // Default to 'Fort Worth' if no parameter provided
+    const QUERY_API_URL = 'https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query';
+    const UPDATE_API_URL = 'https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/updateFeatures';
+
+    let editorData = "";
+    let objectID = null;
+
+    let editor = document.querySelector('#editor');
+
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        fetchEditorData();
+
+        editor.addEventListener('input', () => {
+            editorData = editor.value;
+        });
+
+        function fetchEditorData() {
+            esriRequest(QUERY_API_URL, {
+                responseType: "json",
+                query: {
+                    f: 'json',
+                    where: "GlobalId='" + gid + "'",
+                    outFields: 'OBJECTID, PWReview2Comments'
+                }
+            }).then(function (response) {
+                let data = response.data;
+                let attributeData = data.features[0].attributes.PWReview2Comments;
+                objectID = data.features[0].attributes.OBJECTID;
+                editorData = attributeData;
+                editor.value = attributeData;
+            });
+        }
+
+        // Function to display a message to the user
+        function showMessage(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+        }
+
+        // Function to submit data back to REST API
+        window.submitData = function () {
+            // Create features array with updated data
+            const features = [{
+                "attributes": {
+                    "OBJECTID": objectID,
+                    "PWReview2Comments": editorData
+                }
+            }];
+
+            // Convert features to URL-encoded string
+            const formData = new URLSearchParams();
+            formData.append('f', 'json');
+            formData.append('features', JSON.stringify(features));
+
+            // Post data to REST API
+            esriRequest(UPDATE_API_URL, {
+                method: "post",
+                responseType: 'json',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            }).then(function (response) {
+                let data = response.data;
+                if (data.updateResults && data.updateResults[0].success) {
+                    showMessage('Data successfully posted');
+                } else {
+                    showMessage('Failed to post data');
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+                showMessage('Error: ' + error);
+            });
+        }
+    });
+</script>
+
+</html>

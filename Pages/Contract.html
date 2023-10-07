@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Input</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
+    <style>
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+        
+        .form-group2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .form-group3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .form-group4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .submit-btn {
+        display: flex;
+        justify-content: center;
+        
+    }
+
+    .submit-btn input {
+        background-color: #00904fb1;
+        border: 1px solid white;
+        /* Adjust border size as per requirement */
+        border-radius: 50px;
+        /* Adjust radius as per requirement */
+        width: 20%;
+        font-size: 15px;
+        color: white !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* Adds space between items */
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+
+    .submit-btn input:hover {
+            background-color: #36387c;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }    
+        
+        .checkbox-container input {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="dataForm">
+        <fieldset>
+            <legend>Contract Details</legend>
+            <div class="form-group3">
+
+                <input type="text" id="ContractTitle" name="ContractTitle" placeholder="Contract Title" required>
+                <input type="text" id="ContractID" name="ContractID" placeholder="Contract ID" required>
+                <input type="text" id="InvitationID" name="InvitationID" placeholder="Invitation ID">
+            </div>
+            <label>Military or Civil</label>
+            <div>
+                <select name="militaryorcivilcode" id="militaryorcivilcode">
+                    <option value="A">Military</option>
+                    <option value="W">Civil</option>
+                </select>
+
+            </div>
+            <label>Primary Species</label>
+            <select name="PrimarySpecies" id="PrimarySpecies">
+                <option value="Alder">Alder</option>
+                <option value="Chamarecyparis">Chamarecyparis</option>
+                <option value="Cottonwood">Cottonwood</option>
+                <option value="Douglas Fir">Douglas Fir</option>
+                <option value="Grand Fir">Grand Fir</option>
+                <option value="Pacific Madrona">Pacific Madrona</option>
+                <option value="Pondarosa Pine">Pondarosa Pine</option>
+                <option value="Red Cedar">Red Cedar</option>
+                <option value="White Fir">White Fir</option>
+                <option value="White Oak">White Oak</option>
+                <option value="Woody Biomass">Woody Biomass</option>
+            </select>
+            <div class="form-group4">
+                <label for="LoggingStartDate">Logging Start Date</label>
+                <input type="date" id="LoggingStartDate" name="LoggingStartDate" placeholder="Logging Start Date">
+                <label for="LoggingEndDate">Logging End Date</label>
+                <input type="date" id="LoggingEndDate" name="LoggingEndDate" placeholder="Logging End Date">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Location Details</legend>
+            <div class="form-group4">
+                <input type="text" id="installation" name="installation" placeholder="Installation">
+                <input type="text" id="TrainingArea" name="TrainingArea" placeholder="Training Area">
+                <input type="text" id="county" name="county" placeholder="County">
+                <input type="text" id="TownshipRangeSection" name="TownshipRangeSection" placeholder="Township Range Section">
+                <input type="text" id="Latitude" name="Latitude" placeholder="Latitude">
+                <input type="text" id="Longitude" name="Longitude" placeholder="Longitude">
+                <input type="text" id="grid" name="grid" placeholder="Grid">
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Contract Type and Status</legend>
+            <label for="ContractType">Contract Type</label>
+            <select name="ContractType" id="ContractType">
+                <option value="Timber">Timber</option>
+                <option value="Salvage">Salvage</option>
+                <option value="Firewood (Contract)">Firewood (Contract)</option>
+                <option value="Construction-Related">Construction-Related</option>
+                <option value="Training & Range Improvement">Training & Range Improvement</option>
+                <option value="Ecological/Restoration">Ecological/Restoration</option>
+                <option value="Wildlife/Habitat Improvement">Wildlife/Habitat Improvement</option>
+                <option value="Firewood (Permit)">Firewood (Permit)</option>
+                <option value="Obstruction Removal">Obstruction Removal</option>
+                <option value="WA National Guard">WA National Guard</option>
+                <option value="Right of Way Harvest">Right of Way Harvest</option>
+                <option value="Recreation Enhancement">Recreation Enhancement</option>
+            </select>
+
+            <label>Contract Status</label>
+            <div>
+                <select name="SalesContractStatus" id="SalesContractStatus">
+                    <option value="Active-Logging">Active-Logging</option>
+                    <option value="Active-On Hold">Active-On Hold</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Finalizing">Finalizing</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Planning">Planning</option>
+                    <option value="Rescinded">Rescinded</option>
+                    <option value="Z-Other">Z-Other</option>
+                </select>
+                <label>Declared/Supplemental</label>
+                <div>
+                    <input type="radio" name="Declared_Supplemental" value="Declared">
+                    <label for="Declared_Supplemental">Declared</label>
+
+                    <input type="radio" name="Declared_Supplemental" value="Supplemental">
+                    <label for="Declared_Supplemental">Supplemental</label>
+                </div>
+        </fieldset>
+
+        </div>
+        <fieldset>
+            <legend>POC Information</legend>
+
+            <div class="form-group2">
+
+                <select id="TimberSalesSpecialist" name="TimberSalesSpecialist">
+                    <!-- Options will be filled by JavaScript -->
+                </select>
+                <select id="purchaser" name="purchaser">
+                    <!-- Options will be filled by JavaScript -->
+                </select>
+                <input type="text" id="PurchaserPOC" name="PurchaserPOC" placeholder="Purchaser POC">
+                <input type="text" id="PurchaserPOCPhone" name="PurchaserPOCPhone" placeholder="Purchaser POC Phone">
+                <input type="text" id="PurchaserPOCEmail" name="PurchaserPOCEmail" placeholder="Purchaser POC Email">
+                <select id="logger" name="logger">
+                    <!-- Options will be filled by JavaScript -->
+                </select>
+            </div>
+            <div class="form-group">
+
+            </div>
+
+            <div class="form-group2">
+
+                <label>Unit of Measurement</label>
+                <div>
+                    <input type="radio" id="Cords" name="UnitOfMeasurement" value="Cords">
+                    <label for="Cords">Cords</label>
+
+                    <input type="radio" id="MBF" name="UnitOfMeasurement" value="MBF">
+                    <label for="MBF">MBF</label>
+
+                    <input type="radio" id="Tons" name="UnitOfMeasurement" value="Tons">
+                    <label for="Tons">Tons</label>
+                </div>
+                <input type="number" id="ContractAcres" name="ContractAcres" placeholder="Contract Acres">
+            </div>
+
+            <div class="submit-btn">
+                <input type="submit" value="Submit Edits">
+            </div>
+        </fieldset>
+    </form>
+
+    <script>
+        let featureMap = new Map();
+        const urlParams = new URLSearchParams(window.location.search);
+        const gid = urlParams.get('gid');
+        console.log(gid)
+        require([
+            "esri/identity/IdentityManager",
+            "esri/request",
+            "dojo/domReady!"
+        ], function(IdentityManager, esriRequest) {
+            const purchaserRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
+                responseType: "json",
+                query: {
+                    where: "Purchaser='Yes'",
+                    outFields: "ContactBusinessName, ContactFirstName, ContactLastName, ContactPhone, ContactEMail1",
+                    f: "json"
+                }
+            });
+
+            const signerNamesRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/6/query", {
+                responseType: "json",
+                query: {
+                    where: "isTss='Yes'",
+                    outFields: "SignerName",
+                    returnDistinctValues: true,
+                    f: "json"
+                }
+            });
+
+            // Get objectid from URL parameters
+            
+
+            const dataFetchRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
+                responseType: "json",
+                query: {
+                    where: `GlobalID='${gid}'`,
+                    outFields: "*",
+                    f: "json"
+                }
+            });
+
+            function formatUnixTimestamp(timestamp) {
+                // Create a new Date object
+                const date = new Date(timestamp);
+
+                // Extract the date components
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // months are 0-indexed
+                const day = date.getDate().toString().padStart(2, '0');
+
+                // Format the date string
+                return `${year}-${month}-${day}`;
+            }
+            
+            Promise.all([purchaserRequest, signerNamesRequest, dataFetchRequest])
+                .then(function([purchaserResponse, signerNamesResponse, dataFetchResponse]) {
+                    // Handle the purchaser response
+                    const purchaserSelect = document.getElementById('purchaser');
+                    const loggerSelect = document.getElementById('logger');
+
+                    purchaserSelect.innerHTML = '';
+                    loggerSelect.innerHTML = '';
+
+                    const sortedFeatures = purchaserResponse.data.features.sort((a, b) => {
+                        if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
+                        if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
+                        return 0;
+                    });
+
+                    sortedFeatures.forEach(feature => {
+                        const option = document.createElement('option');
+                        option.value = feature.attributes.ContactBusinessName;
+                        option.textContent = feature.attributes.ContactBusinessName;
+                        featureMap.set(option.value, feature);
+                        purchaserSelect.appendChild(option);
+                    });
+
+                    sortedFeatures.forEach(feature => {
+                        const option = document.createElement('option');
+                        option.value = feature.attributes.ContactBusinessName;
+                        option.textContent = feature.attributes.ContactBusinessName;
+                        featureMap.set(option.value, feature);
+                        loggerSelect.appendChild(option);
+                    });
+
+                    // Handle the signer names response
+                    const signerNames = signerNamesResponse.data.features.map(feature => feature.attributes.SignerName);
+                    const selectElement = document.getElementById('TimberSalesSpecialist');
+                    signerNames.forEach(signerName => {
+                        const optionElement = document.createElement('option');
+                        optionElement.text = signerName;
+                        optionElement.value = signerName;
+                        selectElement.add(optionElement);
+                    });
+
+                    // Handle the data fetch response
+                    const attributes = dataFetchResponse.data.features[0].attributes;
+                    const changes = {
+                        "OBJECTID": attributes["OBJECTID"],
+                    }; // Initialize an empty object to keep track of changes
+
+                    for (const attribute in attributes) {
+                        const formField = document.getElementById(attribute);
+                        if (formField) {
+                            if (formField.type === 'date') {
+                                formField.value = formatUnixTimestamp(attributes[attribute]);
+                            } else {
+                                formField.value = attributes[attribute];
+                            }
+                        }
+                    }
+                    document.getElementById('purchaser').addEventListener('change', function(e) {
+                        // Get the feature from the map using the selected value
+                        const selectedFeature = featureMap.get(e.target.value);
+
+                        if (selectedFeature) {
+                            selectedPOC = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
+                            document.getElementById('PurchaserPOC').value = selectedPOC;
+                            console.log('Selected POC:', selectedPOC);
+
+                            selectedPhone = selectedFeature.attributes.ContactPhone;
+                            document.getElementById('PurchaserPOCPhone').value = selectedPhone;
+                            console.log('Selected Phone:', selectedPhone);
+
+                            selectedEmail = selectedFeature.attributes.ContactEMail1;
+                            document.getElementById('PurchaserPOCEmail').value = selectedEmail;
+                            console.log('Selected Email:', selectedEmail);
+                        }
+                    });
+                    // Convert the select box into a searchable select box with Select2
+                    $(purchaserSelect).select2({
+                        width: 'resolve' // need to override the changed width by Select2
+                    }).on('select2:select', function(e) {
+                        // Get the feature from the map using the selected value
+                        const selectedFeature = featureMap.get(e.target.value);
+
+                        if (selectedFeature) {
+                            selectedPOC = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
+                            document.getElementById('PurchaserPOC').value = selectedPOC;
+                            console.log('Selected POC:', selectedPOC);
+
+                            selectedPhone = selectedFeature.attributes.ContactPhone;
+                            document.getElementById('PurchaserPOCPhone').value = selectedPhone;
+                            console.log('Selected Phone:', selectedPhone);
+
+                            selectedEmail = selectedFeature.attributes.ContactEMail1;
+                            document.getElementById('PurchaserPOCEmail').value = selectedEmail;
+                            console.log('Selected Email:', selectedEmail);
+                        }
+                    });
+
+                    // Add an input event listener to all input fields
+                    Array.from(document.querySelectorAll('input, select')).forEach((element) => {
+                        element.addEventListener('input', function(event) {
+                            // Update the changes object when a field changes
+                            changes[event.target.id] = event.target.value;
+                        });
+                    });
+
+                    // Listen for form submit event
+                    document.getElementById('dataForm').addEventListener('submit', function(event) {
+                        // Prevent the default form submit action
+                        event.preventDefault();
+
+                        // Create features array
+                        const features = [{
+                            "attributes": changes // Use the changes object here
+                        }];
+
+                        // Convert features to URL-encoded string
+                        const formData = new URLSearchParams();
+                        formData.append('f', 'json');
+                        formData.append('updates', JSON.stringify(features));
+
+                        // Send a POST request to your REST endpoint
+                        esriRequest("https://arcportal-ucop-dev.eis.pd.usace.army.mil/arcgis/rest/services/Forestry_Dev/FeatureServer/0/applyEdits", {
+                            method: "post",
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: formData.toString()
+                        }).then(function(response) {
+                            console.log(response.data);
+                        }).catch(function(error) {
+                            console.error(error);
+                        });
+                    });
+                }).catch(error => {
+    console.error(urlParams);
+    // Optionally: Implement a retry mechanism, alert user, or redirect
+});;
+        });
+    </script>
+
+
+</body>
+
+</html>
