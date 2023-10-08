@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Input</title>
+    <style>
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+        }
+        .jumbotron {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .jumbotron h2 {
+            font-weight: 700;
+        }
+
+        .jumbotron p {
+            color: #6c757d;
+        }
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 5px;
+            align-items: center;
+        }
+
+        .form-group2 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            align-items: center;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+        }
+
+        .pdf-btn {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            /* width: 20%; */
+            font-size: 11px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .submit-btn input {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            width: 30%;
+            font-size: 15px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .pdf-btn:hover {
+            background-color: #36387c;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+        }
+
+        .submit-btn input:hover {
+            background-color: #36387c;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-group2 .checkbox-container {
+            grid-column: span 2;
+            /* Span two grid columns to accommodate both checkbox and label */
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group2 label {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            /* Change the font size to your desired value */
+            /* Standard sans-serif font family */
+            /* The label will now be part of the .checkbox-container */
+        }
+
+        .form-group2 input {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            /* Standard sans-serif font family */
+            /* Each input field spans one grid column */
+        }
+    </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+
+    <script src="luxon.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
+
+</head>
+
+<body>
+
+    <div id="commenttable"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="jumbotron text-center mt-4">
+                    <form id="dataForm">
+                        <div class="form-group">
+                            <input type="text" id="comment" name="comment" placeholder="Comments">
+                        </div>
+                        <div class="form-group2">
+                            <input type="date" id="dat" name="dat" placeholder="Scale Location">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="show" name="show" placeholder="Show Comments?">
+                                <label for="show">Show Comments on Timber Cutting Report?</label>
+                            </div>
+                        </div>
+
+                        <div class="submit-btn">
+                            <input type="submit" value="Submit New Comment">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    let selectedBureau = ''; // Move this line here
+    let featureMap = new Map();
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esri/Map", "esri/views/MapView"],
+        function (IdentityManager, esriRequest) {
+            // Fetch the data when the document is ready
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/5/query", {
+                responseType: "json",
+                query: {
+                    where: "parentglobalid = '" + pgid + "'",
+                    outFields: "*",
+                    f: "json"
+                }
+
+            }).then(function (response) {
+                // Extract data
+                var tableData = response.data.features.map(function (feature) {
+                    return feature.attributes;
+                });
+
+                // Define table
+                var table = new Tabulator("#commenttable", {
+                    data: tableData, //assign data to table
+                    columns: [
+                        { title: "Comment", field: "TimberCutRptComments" },
+                        { title: "Submitted Date", field: "TimberCutRptDate", formatter: "datetime" },
+                        { title: "Show Comments on Cutting Report", field: "ShowComments", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                        { title: "ObjectID", field: "OBJECTID", visible: false }
+
+                    ]
+                });
+                table.on("cellEdited", function (cell) {
+                    //cell - cell component
+                    var field = cell.getField(); // get field name
+                    var value = cell.getValue(); // get current cell value
+                    var row = cell.getRow().getData(); // get the data for the row
+                    var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
+                    handleEdit(field, value, objectId);
+                });
+            });
+        });
+        function handleEdit(field, value, objectId) {
+            console.log("Updated: ", field, value, objectId);
+
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
+        function (IdentityManager, esriRequest) {
+
+            document.getElementById('dataForm').addEventListener('submit', function (event) {
+                // Prevent the default form submit action
+                event.preventDefault();
+
+                // Get values from the form
+                const dat = document.getElementById('dat').value;
+                const comment = (document.getElementById('comment').value);
+                const show = document.getElementById('show').checked ? 'Yes' : 'No';
+
+
+                // Create features array
+                const features = [{
+                    "attributes": {
+                        "TimberCutRptDate": dat,
+                        "TimberCutRptComments": comment,
+                        "ShowComments": show,
+                        "parentglobalid": pgid
+                    }
+                }];
+
+                // Convert features to URL-encoded string
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                console.log(features);
+                // Send a POST request to your REST endpoint
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/5/addFeatures", {
+                    method: "post",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function (response) {
+                    console.log(response.data);
+                }).catch(function (error) {
+                    console.error(error);
+
+                });
+            });
+        });
+</script>
+
+</html>
