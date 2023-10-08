@@ -16,7 +16,6 @@
         .col-md-2 {
             position: relative;
 
-            background: url('forest.jpg') no-repeat center center;
             background-size: cover;
             height: 100vh;
             padding-left: 0;
@@ -37,9 +36,19 @@
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
             /* optional: a soft shadow for depth */
         }
-
+        .blur-div {
+  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.1);
+  padding: 50px;
+  border-radius: 10px;
+}
         html,
         body {
+            background: url('forest.jpg') no-repeat center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
             height: 100%;
             margin: 0;
             padding: 0;
@@ -256,7 +265,8 @@
                 </div>
 
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10 blur-div">
+                
                 <iframe id="subPageFrame" name="subPageFrame" style="width:100%; height:100%; border:none;"></iframe>
 
             </div>
