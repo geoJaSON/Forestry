@@ -17,12 +17,20 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script src="https://js.arcgis.com/4.21/"></script>
     <style>
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
+        .jumbotron {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
         }
 
+        .jumbotron h2 {
+            font-weight: 700;
+        }
+
+        .jumbotron p {
+            color: #6c757d;
+        }
 
         .submit-btn {
             display: flex;
@@ -119,34 +127,62 @@
     </div>
     <div id="brandtable"></div>
     <hr>
-
-    <form id="dataForm">
-        <!-- Group 1: Dropdowns and Text Inputs -->
-        <div class="form-group">
-            <select class="form-select" id="sawmill" name="sawmill">
-                <option value="destination1">Loading Contacts</option>
-            </select>
-            <input class="form-control" type="text" id="bureau" name="bureau" placeholder="Scaling Bureau">
-            <input class="form-control" type="text" id="locat" name="locat" placeholder="Scale Location">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="jumbotron text-center mt-4"">
+                    <form id="dataForm">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row form-group">
+                                        <div class="col-md-4">
+                                            <select class="form-select" id="sawmill" name="sawmill">
+                                                <option value="destination1">Loading Contacts</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" id="bureau" name="bureau"
+                                                placeholder="Scaling Bureau">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-control" type="text" id="locat" name="locat"
+                                                placeholder="Scale Location">
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-3">
+                                            <label for="domsent">Domestic Date Sent:</label>
+                                            <input class="form-control" type="date" id="domsent" name="domsent"
+                                                placeholder="Domestic Date Sent">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="domrec">Domestic Date Received:</label>
+                                            <input class="form-control" type="date" id="domrec" name="domrec"
+                                                placeholder="Domestic Date Received">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="metsent">Metal Con Date Sent:</label>
+                                            <input class="form-control" type="date" id="metsent" name="metsent"
+                                                placeholder="Metal Con Date Sent">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="metrec">Metal Con Date Received:</label>
+                                            <input class="form-control" type="date" id="metrec" name="metrec"
+                                                placeholder="Metal Con Date Received">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="submit-btn">
+                            <input type="submit" value="Submit New">
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <!-- Group 2: Labels and Date Inputs -->
-        <div class="form-group2">
-            <label for="domsent">Domestic Date Sent:</label>
-            <input class="form-control" type="date" id="domsent" name="domsent" placeholder="Domestic Date Sent">
-            <label for="domrec">Domestic Date Received:</label>
-            <input class="form-control" type="date" id="domrec" name="domrec" placeholder="Domestic Date Received">
-            <label for="metsent">Metal Con Date Sent:</label>
-            <input class="form-control" type="date" id="metsent" name="metsent" placeholder="Metal Con Date Sent">
-            <label for="metrec">Metal Con Date Received:</label>
-            <input class="form-control" type="date" id="metrec" name="metrec" placeholder="Metal Con Date Received">
-        </div>
-
-        <!-- Submit Button -->
-        <div class="submit-btn">
-            <input type="submit" value="Submit New Bid">
-        </div>
-    </form>
+    </div>
 </body>
 <script>
     let selectedBureau = ''; // Move this line here
