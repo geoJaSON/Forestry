@@ -98,12 +98,14 @@
 
     <div class="container-fluid">
         <div class="button-container">
+            <button type="button" id="ScaledAbstract" class="btn btn-secondary btn-sm pdf-btn">Abstract
+                (Scaled)</button>
+            <button type="button" id="CheckReturn" class="btn btn-secondary btn-sm pdf-btn">Abstract (Lump Sum)</button>
             <button type="button" id="NoBids" class="btn btn-secondary btn-sm pdf-btn">No Bids Returned
                 Statement</button>
             <button type="button" id="SumAbstract" class="btn btn-secondary btn-sm pdf-btn">Check Return Letter</button>
-            <button type="button" id="CheckReturn" class="btn btn-secondary btn-sm pdf-btn">Abstract (Lump Sum)</button>
-            <button type="button" id="ScaledAbstract" class="btn btn-secondary btn-sm pdf-btn">Abstract
-                (Scaled)</button>
+
+
 
         </div>
         <div class="row">
@@ -428,7 +430,7 @@
                 const blob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
-                link.download = "Contract_" + contractId + "_AbstractOfBids.pdf";
+                link.download = "Contract_" + sale.features[0].attributes.ContractTitle + "_AbstractOfBids.pdf";
                 link.click();
 
             } catch (error) {
