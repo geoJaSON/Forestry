@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script src="https://js.arcgis.com/4.21/"></script>
     <style>
-                input[type="text"],
+        input[type="text"],
         input[type="number"],
         select,
         textarea {
@@ -26,10 +26,12 @@
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
+
         .submit-btn {
             display: flex;
             justify-content: center;
         }
+
         html,
         body {
             font-family: Arial, sans-serif;
@@ -127,75 +129,93 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="jumbotron text-center mt-4"">
-                    <div class="button-container">
-                        <button type="button" id="bdbs" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank)
-                            (Scaled)</button>
-                        <button type="button" id="bdbls" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank) (Lump
-                            Sum)</button>
-                        <button type="button" id="bdbtwp" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank) (Ton
-                            Wood-Pulp)</button>
-                        <button type="button" id="bddb" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Destinations and
-                            Bureaus)</button>
-                    </div>
-                
-                    <div class="button-container">
-                        <button type="button" id="dpfb" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form
-                            (Blank)</button>
-                        <button type="button" id="dpfdn" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form (with
-                            Destination Names)</button>
-                        <button type="button" id="ldpd" class="btn btn-secondary btn-sm pdf-btn">Letter (Domestic Processing to
-                            Destinations)</button>
-                        <button type="button" id="mcfb" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form
-                            (Blank)</button>
-                        <button type="button" id="mcfdn" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form (with
-                            Destination Names)</button>
-                        <button type="button" id="lmcd" class="btn btn-secondary btn-sm pdf-btn">Letter (Metal Contamination to
-                            Destinations)</button>
-                    </div>
-                    <br>
-                    <div id="brandtable"></div>
-                    <br>
-                    <fieldset>
-                        <legend>Brand Designation (Destinations and Bureaus)</legend>
+                    <div class=" button-container">
+                    <button type="button" id="bdbs" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank)
+                        (Scaled)</button>
+                    <button type="button" id="bdbls" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank)
+                        (Lump
+                        Sum)</button>
+                    <button type="button" id="bdbtwp" class="btn btn-secondary btn-sm pdf-btn">Brand Designation (Blank)
+                        (Ton
+                        Wood-Pulp)</button>
+                    <button type="button" id="bddb" class="btn btn-secondary btn-sm pdf-btn">Brand Designation
+                        (Destinations and
+                        Bureaus)</button>
+                </div>
+
+                <div class="button-container">
+                    <button type="button" id="dpfb" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form
+                        (Blank)</button>
+                    <button type="button" id="dpfdn" class="btn btn-secondary btn-sm pdf-btn">Domestic Processing Form
+                        (with
+                        Destination Names)</button>
+                    <button type="button" id="ldpd" class="btn btn-secondary btn-sm pdf-btn">Letter (Domestic Processing
+                        to
+                        Destinations)</button>
+                    <button type="button" id="mcfb" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form
+                        (Blank)</button>
+                    <button type="button" id="mcfdn" class="btn btn-secondary btn-sm pdf-btn">Metal Contamination Form
+                        (with
+                        Destination Names)</button>
+                    <button type="button" id="lmcd" class="btn btn-secondary btn-sm pdf-btn">Letter (Metal Contamination
+                        to
+                        Destinations)</button>
+                </div>
+                <br>
+                <div id="brandtable"></div>
+                <br>
+                <fieldset>
+                    <legend>Brand Designation (Destinations and Bureaus)</legend>
                     <form id="dataForm">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row form-group">
                                         <div class="col-md-4">
-                                            <select class="form-select" id="sawmill" name="sawmill">
-                                                <option value="destination1">Loading Contacts</option>
-                                            </select>
+                                            <div class="form-floating mb-3">
+                                                <select class="form-select" id="sawmill" name="sawmill">
+                                                    <option value="destination1">Loading Contacts</option>
+                                                </select>
+                                                <label for="sawmill">Sawmill Destination</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <input class="form-control" type="text" id="bureau" name="bureau"
-                                                placeholder="Scaling Bureau">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="text" id="bureau" name="bureau">
+                                                <label for="bureau">Scaling Bureau</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <input class="form-control" type="text" id="locat" name="locat"
-                                                placeholder="Scale Location">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="text" id="locat" name="locat">
+                                                <label for="locat">Scale Location</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div class="col-md-3">
-                                            <label for="domsent">Domestic Date Sent:</label>
-                                            <input class="form-control" type="date" id="domsent" name="domsent"
-                                                placeholder="Domestic Date Sent">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="date" id="domsent" name="domsent">
+                                                <label for="domsent">Domestic Date Sent:</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="domrec">Domestic Date Received:</label>
-                                            <input class="form-control" type="date" id="domrec" name="domrec"
-                                                placeholder="Domestic Date Received">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="date" id="domrec" name="domrec">
+                                                <label for="domrec">Domestic Date Received:</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="metsent">Metal Con Date Sent:</label>
-                                            <input class="form-control" type="date" id="metsent" name="metsent"
-                                                placeholder="Metal Con Date Sent">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="date" id="metsent" name="metsent">
+                                                <label for="metsent">Metal Con Date Sent:</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="metrec">Metal Con Date Received:</label>
-                                            <input class="form-control" type="date" id="metrec" name="metrec"
-                                                placeholder="Metal Con Date Received">
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" type="date" id="metrec" name="metrec">
+                                                <label for="metrec">Metal Con Date Received:</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -206,9 +226,9 @@
                         </div>
                     </form>
                 </fieldset>
-                </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 <script>
