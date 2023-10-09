@@ -15,30 +15,56 @@
 
 </head>
 <style>
-    body {
-        padding: 20px;
-        background-color: #00000000;
-
-        font-family: Arial, sans-serif;
-    }
-
-    .editor-container {
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        border-radius: 15px;
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    #message {
-        margin-top: 20px;
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
     }
 
     .submit-btn {
         display: flex;
         justify-content: center;
+    }
 
+    html,
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        background-color: #00000000;
+        color: rgb(0, 0, 0);
+    }
+
+    .jumbotron {
+        background-color: #ffffff2d;
+        border: 0px solid #fff;
+        color: #ffffff;
+
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .jumbotron h2 {
+        font-weight: 700;
+    }
+
+    .jumbotron p {
+        color: #ffffff;
+    }
+
+    fieldset {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    legend {
+        color: white;
+        font-weight: bold;
     }
 
     .pdf-btn {
@@ -63,7 +89,7 @@
         /* Adjust border size as per requirement */
         border-radius: 50px;
         /* Adjust radius as per requirement */
-        width: 20%;
+        width: 30%;
         font-size: 15px;
         color: white !important;
         margin-top: 5px;
@@ -73,23 +99,21 @@
         transition: all 0.2s ease-out;
     }
 
-    .pdf-btn:hover{        
-        background-color: #36387c;
+    .pdf-btn:hover {
+        background-color: #ffffff56;
         transform: scale(1.1);
         /* Image will zoom in slightly when hovered over */
-        border: 2px solid #fff;}
+        border: 2px solid #fff;
+    }
+
     .submit-btn input:hover {
-        background-color: #36387c;
+        background-color: #ffffff56;
         transform: scale(1.1);
         /* Image will zoom in slightly when hovered over */
         border: 2px solid #fff;
         /* Add a border on hover */
     }
 
-
-    body {
-        font-family: Arial, sans-serif;
-    }
 
     .button-container {
         display: flex;
@@ -98,28 +122,57 @@
 </style>
 
 <body>
-    <div class="button-container">
-        <button type="button" id="memo" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo</button>
-        <button type="button" id="memo2" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo (Review
-            #2)</button>
-        <button type="button" id="memoamend" class="btn btn-secondary btn-sm pdf-btn">Post Forester Approval Memo
-            (Amendment)</button>
-        <button type="button" id="cover" class="btn btn-secondary btn-sm pdf-btn">Amendment Cover Letter</button>
-        <button type="button" id="reco" class="btn btn-secondary btn-sm pdf-btn">RECO Approval Memo</button>
-    </div>
     <div class="container">
-        <div class="editor-container col-md-8 offset-md-2">
-            <h4>PW Review #/ Amendment Comments / Changes</h4>
-            <textarea id="editor" class="form-control" style="height: 300px;"></textarea>
-            <div id="message"></div>
-        </div>
-        <div class="submit-btn">
-            <input type="submit" value="Submit New Comment">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+                <div class="jumbotron text-center mt-4">
+                    <div class="container-fluid">
+                        <div class="button-container">
+                            <button type="button" id="memo" class="btn btn-secondary btn-sm pdf-btn">Post Forester
+                                Approval Memo</button>
+                            <button type="button" id="memo2" class="btn btn-secondary btn-sm pdf-btn">Post Forester
+                                Approval Memo (Review
+                                #2)</button>
+                            <button type="button" id="memoamend" class="btn btn-secondary btn-sm pdf-btn">Post Forester
+                                Approval Memo
+                                (Amendment)</button>
+                            <button type="button" id="cover" class="btn btn-secondary btn-sm pdf-btn">Amendment Cover
+                                Letter</button>
+                            <button type="button" id="reco" class="btn btn-secondary btn-sm pdf-btn">RECO Approval
+                                Memo</button>
+                        </div>
+
+                    </div>
+                    <br>
+                    <form id="dataForm">
+                        <fieldset>
+                            <legend>PW Review #/ Amendment Comments / Changes</legend>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-floating mb-3">
+                                                    <textarea id="editor" class="form-control"
+                                                        style="height: 300px"></textarea>
+                                                    <div id="message"></div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="submit-btn">
+                                    <input type="submit" value="Submit">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-
-
-    <div id="message"></div>
 </body>
 
 <script>

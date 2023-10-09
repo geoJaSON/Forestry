@@ -18,17 +18,32 @@
     <script src="luxon.min.js"></script>
     <script src="https://js.arcgis.com/4.21/"></script>
     <style>
+                input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
         .submit-btn {
             display: flex;
             justify-content: center;
-
         }
+        html,
         body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
             background-color: #00000000;
-
+            color: rgb(0, 0, 0);
         }
+
         .jumbotron {
-            background-color: #ffffff;
+            background-color: #ffffff2d;
+            border: 0px solid #fff;
+            color: #ffffff;
+
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
@@ -39,7 +54,18 @@
         }
 
         .jumbotron p {
-            color: #6c757d;
+            color: #ffffff;
+        }
+
+        fieldset {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        legend {
+            color: white;
+            font-weight: bold;
         }
 
         .pdf-btn {
@@ -75,14 +101,14 @@
         }
 
         .pdf-btn:hover {
-            background-color: #36387c;
+            background-color: #ffffff56;
             transform: scale(1.1);
             /* Image will zoom in slightly when hovered over */
             border: 2px solid #fff;
         }
 
         .submit-btn input:hover {
-            background-color: #36387c;
+            background-color: #ffffff56;
             transform: scale(1.1);
             /* Image will zoom in slightly when hovered over */
             border: 2px solid #fff;
@@ -99,397 +125,432 @@
 
 <body>
 
-    <div class="container-fluid">
-        <div class="button-container">
-            <button type="button" id="ScaledAbstract" class="btn btn-secondary btn-sm pdf-btn">Abstract
-                (Scaled)</button>
-            <button type="button" id="CheckReturn" class="btn btn-secondary btn-sm pdf-btn">Abstract (Lump Sum)</button>
-            <button type="button" id="NoBids" class="btn btn-secondary btn-sm pdf-btn">No Bids Returned
-                Statement</button>
-            <button type="button" id="SumAbstract" class="btn btn-secondary btn-sm pdf-btn">Check Return Letter</button>
-
-
-
-        </div>
-        <div class="row">
-            <br>
-            <div id="bidtable"></div>
-            <hr>
-        </div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div class="jumbotron text-center mt-4">
-                        <form id="dataForm">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" id="bidunit" name="bidunit"
-                                            placeholder="Bid Unit">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" id="biddeposit" name="biddeposit"
-                                            placeholder="Bid Deposit">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <select class="form-select" id="biddername" name="biddername">
-                                            <option value="destination1">Loading Contacts</option>
-                                            <option value=" " disabled selected>Species</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="bidderaddress" name="bidderaddress"
-                                            placeholder="Bidder Address">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" id="totaloffer" name="totaloffer"
-                                            placeholder="Total Offer">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="bidderpoc" name="bidderpoc"
-                                            placeholder="Bidder POC">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="bidderphone" name="bidderphone"
-                                            placeholder="Bidder Phone">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="bidderemail" name="bidderemail"
-                                            placeholder="Bidder Email">
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="submit-btn">
-                                <input type="submit" value="Submit New Bid">
-                            </div>
-                        </form>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                
+                <div class="jumbotron text-center mt-4">
+                    <div class="container-fluid">
+                        <div class="button-container">
+                            <button type="button" id="ScaledAbstract" class="btn btn-secondary btn-sm pdf-btn">Abstract
+                                (Scaled)</button>
+                            <button type="button" id="CheckReturn" class="btn btn-secondary btn-sm pdf-btn">Abstract (Lump Sum)</button>
+                            <button type="button" id="NoBids" class="btn btn-secondary btn-sm pdf-btn">No Bids Returned
+                                Statement</button>
+                            <button type="button" id="SumAbstract" class="btn btn-secondary btn-sm pdf-btn">Check Return Letter</button>
+                
+                        </div>
+                
                     </div>
+                    <br>
+                    <div class="row">
+                    <br>
+                    <div id="bidtable"><br></div>
+                    <br>
+                </div>
+                <br>
+                <form id="dataForm">
+                        <fieldset>
+                            <legend>Add New Bid</legend>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number" class="form-control" id="bidunit"
+                                                        name="bidunit">
+                                                    <label for="bidunit">Bid Unit</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number" class="form-control" id="biddeposit"
+                                                        name="biddeposit">
+                                                    <label for="biddeposit">Bid Deposit</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" id="biddername" name="biddername">
+                                                        <option value="destination1">Loading Contacts</option>
+                                                    </select>
+                                                    <label for="biddername">Bidder Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="bidderaddress"
+                                                        name="bidderaddress">
+                                                    <label for="bidderaddress">Bidder Address</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number" class="form-control" id="totaloffer"
+                                                        name="totaloffer">
+                                                    <label for="totaloffer">Total Offer</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="bidderpoc"
+                                                        name="bidderpoc">
+                                                    <label for="bidderpoc">Bidder POC</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="bidderphone"
+                                                        name="bidderphone">
+                                                    <label for="bidderphone">Bidder Phone</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="bidderemail"
+                                                        name="bidderemail">
+                                                    <label for="bidderemail">Bidder Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="submit-btn">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+</body>
 
 
 
 
 
 
-    <script>
-        let selectedAddress = ''; // Move this line here
-        let featureMap = new Map();
-        var urlParams = new URLSearchParams(window.location.search);
-        var pgid = urlParams.get('gid');
+<script>
+    let selectedAddress = ''; // Move this line here
+    let featureMap = new Map();
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
 
-        function ensureString(value) {
-            if (value === null || value === undefined) {
-                return '';
-            }
-            return String(value);
+    function ensureString(value) {
+        if (value === null || value === undefined) {
+            return '';
         }
+        return String(value);
+    }
 
 
-        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/query", {
-                responseType: "json",
-                query: {
-                    where: "parentglobalid = '" + pgid + "'",
-                    outFields: "*",
-                    f: "json"
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
+            }
+        }).then(function (response) {
+            // Extract data
+            var tableData = response.data.features.map(function (feature) {
+                return feature.attributes;
+            });
+
+            // Define table
+            var table = new Tabulator("#bidtable", {
+                data: tableData, //assign data to table
+                columns: [
+                    { title: "Contract No", field: "abscontractno", headerFilter: "input", visible: false },
+                    { title: "Bidder Name", field: "biddername", editor: "input" },
+                    { title: "List No", field: "AbsListNo", editor: "input" },
+                    { title: "Unit Bid", field: "unitbid", editor: "input" },
+                    { title: "Bid Deposit", field: "biddeposit", editor: "input" },
+                    { title: "Total Offer", field: "totaloffer", editor: "input" },
+                    { title: "Highest To Lowest Bid No", field: "bidrank", editor: "input" },
+                    { title: "GlobalID", field: "GlobalID", visible: false },
+                    { title: "Created User", field: "created_user", visible: false },
+                    { title: "Input Date", field: "created_date", formatter: "datetime" },
+                    { title: "Last Edited User", field: "last_edited_user", visible: false },
+                    { title: "Last Edited Date", field: "last_edited_date", visible: false },
+                    { title: "Parent GlobalID", field: "parentglobalid", visible: false },
+                    { title: "Return Check To Unsuccessful Bidder Via Mail?", field: "returncheck", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "Bidder Address", field: "bidderaddress", editor: "input" },
+                    { title: "ObjectID", field: "ObjectID", visible: false },
+                    { title: "Bidder Phone", field: "bidderphone", editor: "input" },
+                    { title: "Bidder Email", field: "bidderemail", editor: "input" },
+                    { title: "Bidder City", field: "biddercity", editor: "input" },
+                    { title: "Bidder Zip", field: "bidderzip", editor: "input" },
+                    { title: "Bidder POC", field: "bidderpoc", editor: "input" },
+
+                    { title: "Bidder Tax ID", field: "biddertaxid" }
+                ]
+            });
+            table.on("cellEdited", function (cell) {
+                //cell - cell component
+                var field = cell.getField(); // get field name
+                var value = cell.getValue(); // get current cell value
+                var row = cell.getRow().getData(); // get the data for the row
+                var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
+                handleEdit(field, value, objectId);
+            });
+        })
+    });
+
+    function handleEdit(field, value, objectId) {
+        console.log("Updated: ", field, value, objectId);
+
+    }
+
+
+
+
+
+
+
+
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
+            responseType: "json",
+            query: {
+                where: "1=1",
+                outFields: "ContactBusinessName, ContactStreet1, ContactPhone, ContactEMail1,ContactCity,ContactZip,ContactFirstName, ContactLastName",
+                f: "json"
+            }
+
+        }).then(function (response) {
+            const bidderSelect = document.getElementById('biddername');
+            bidderSelect.innerHTML = '';
+
+            // Sort and iterate through features
+            const sortedFeatures = response.data.features.sort((a, b) => {
+                if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
+                if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
+                return 0;
+            });
+            sortedFeatures.forEach(feature => {
+                const option = document.createElement('option');
+                option.value = feature.attributes.ContactBusinessName;
+                option.textContent = feature.attributes.ContactBusinessName;
+
+                // Store the feature in the map
+                featureMap.set(option.value, feature);
+
+                // Append the new option to the select
+                bidderSelect.appendChild(option);
+            });
+
+            document.getElementById('biddername').addEventListener('change', function (e) {
+                // Get the feature from the map using the selected value
+                const selectedFeature = featureMap.get(e.target.value);
+
+                if (selectedFeature) {
+                    selectedAddress = selectedFeature.attributes.ContactStreet1;
+                    document.getElementById('bidderaddress').value = selectedAddress;
+                    console.log('Selected Address:', selectedAddress);
                 }
-            }).then(function (response) {
-                // Extract data
-                var tableData = response.data.features.map(function (feature) {
-                    return feature.attributes;
-                });
+            });
 
-                // Define table
-                var table = new Tabulator("#bidtable", {
-                    data: tableData, //assign data to table
-                    columns: [
-                        { title: "Contract No", field: "abscontractno", headerFilter: "input", visible: false },
-                        { title: "Bidder Name", field: "biddername", editor: "input" },
-                        { title: "List No", field: "AbsListNo", editor: "input" },
-                        { title: "Unit Bid", field: "unitbid", editor: "input" },
-                        { title: "Bid Deposit", field: "biddeposit", editor: "input" },
-                        { title: "Total Offer", field: "totaloffer", editor: "input" },
-                        { title: "Highest To Lowest Bid No", field: "bidrank", editor: "input" },
-                        { title: "GlobalID", field: "GlobalID", visible: false },
-                        { title: "Created User", field: "created_user", visible: false },
-                        { title: "Input Date", field: "created_date", formatter: "datetime" },
-                        { title: "Last Edited User", field: "last_edited_user", visible: false },
-                        { title: "Last Edited Date", field: "last_edited_date", visible: false },
-                        { title: "Parent GlobalID", field: "parentglobalid", visible: false },
-                        { title: "Return Check To Unsuccessful Bidder Via Mail?", field: "returncheck", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
-                        { title: "Bidder Address", field: "bidderaddress", editor: "input" },
-                        { title: "ObjectID", field: "ObjectID", visible: false },
-                        { title: "Bidder Phone", field: "bidderphone", editor: "input" },
-                        { title: "Bidder Email", field: "bidderemail", editor: "input" },
-                        { title: "Bidder City", field: "biddercity", editor: "input" },
-                        { title: "Bidder Zip", field: "bidderzip", editor: "input" },
-                        { title: "Bidder POC", field: "bidderpoc", editor: "input" },
 
-                        { title: "Bidder Tax ID", field: "biddertaxid" }
-                    ]
-                });
-                table.on("cellEdited", function (cell) {
-                    //cell - cell component
-                    var field = cell.getField(); // get field name
-                    var value = cell.getValue(); // get current cell value
-                    var row = cell.getRow().getData(); // get the data for the row
-                    var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
-                    handleEdit(field, value, objectId);
-                });
-            })
+
+            // Convert the select box into a searchable select box with Select2
+            $(bidderSelect).select2({
+                width: 'resolve' // need to override the changed width by Select2
+            }).on('select2:select', function (e) {
+                // Get the feature from the map using the selected value
+                const selectedFeature = featureMap.get(e.target.value);
+
+                if (selectedFeature) {
+                    selectedAddress = selectedFeature.attributes.ContactStreet1;
+                    document.getElementById('bidderaddress').value = selectedAddress;
+                    console.log('Selected Address:', selectedAddress);
+                }
+            });
+        }).catch(function (error) {
+            console.error(error);
         });
 
-        function handleEdit(field, value, objectId) {
-            console.log("Updated: ", field, value, objectId);
+        document.getElementById('dataForm').addEventListener('submit', function (event) {
+            // Prevent the default form submit action
+            event.preventDefault();
 
-        }
+            // Get values from the form
+            const bname = document.getElementById('biddername').value;
+            const baddress = document.getElementById('bidderaddress').value;
+            const unit = parseInt(document.getElementById('bidunit').value);
+            const deposit = parseInt(document.getElementById('biddeposit').value);
+            const total = parseInt(document.getElementById('totaloffer').value);
 
-
-
-
-
-
-
-
-        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
-                responseType: "json",
-                query: {
-                    where: "1=1",
-                    outFields: "ContactBusinessName, ContactStreet1, ContactPhone, ContactEMail1,ContactCity,ContactZip,ContactFirstName, ContactLastName",
-                    f: "json"
+            // Create features array
+            const features = [{
+                "attributes": {
+                    "abscontractno": cid,
+                    "biddername": bname,
+                    "bidderaddress": baddress,
+                    "unitbid": unit,
+                    "biddeposit": deposit,
+                    "totaloffer": total,
+                    "parentglobalid": pgid
                 }
+            }];
 
+            // Convert features to URL-encoded string
+            console.log(features)
+
+            const formData = new URLSearchParams();
+            formData.append('f', 'json');
+            formData.append('features', JSON.stringify(features));
+            // Send a POST request to your REST endpoint
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/addFeatures", {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
             }).then(function (response) {
-                const bidderSelect = document.getElementById('biddername');
-                bidderSelect.innerHTML = '';
-
-                // Sort and iterate through features
-                const sortedFeatures = response.data.features.sort((a, b) => {
-                    if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
-                    if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
-                    return 0;
-                });
-                sortedFeatures.forEach(feature => {
-                    const option = document.createElement('option');
-                    option.value = feature.attributes.ContactBusinessName;
-                    option.textContent = feature.attributes.ContactBusinessName;
-
-                    // Store the feature in the map
-                    featureMap.set(option.value, feature);
-
-                    // Append the new option to the select
-                    bidderSelect.appendChild(option);
-                });
-
-                document.getElementById('biddername').addEventListener('change', function (e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
-
-                    if (selectedFeature) {
-                        selectedAddress = selectedFeature.attributes.ContactStreet1;
-                        document.getElementById('bidderaddress').value = selectedAddress;
-                        console.log('Selected Address:', selectedAddress);
-                    }
-                });
-
-
-
-                // Convert the select box into a searchable select box with Select2
-                $(bidderSelect).select2({
-                    width: 'resolve' // need to override the changed width by Select2
-                }).on('select2:select', function (e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
-
-                    if (selectedFeature) {
-                        selectedAddress = selectedFeature.attributes.ContactStreet1;
-                        document.getElementById('bidderaddress').value = selectedAddress;
-                        console.log('Selected Address:', selectedAddress);
-                    }
-                });
+                console.log(response.data);
             }).catch(function (error) {
                 console.error(error);
             });
-
-            document.getElementById('dataForm').addEventListener('submit', function (event) {
-                // Prevent the default form submit action
-                event.preventDefault();
-
-                // Get values from the form
-                const bname = document.getElementById('biddername').value;
-                const baddress = document.getElementById('bidderaddress').value;
-                const unit = parseInt(document.getElementById('bidunit').value);
-                const deposit = parseInt(document.getElementById('biddeposit').value);
-                const total = parseInt(document.getElementById('totaloffer').value);
-
-                // Create features array
-                const features = [{
-                    "attributes": {
-                        "abscontractno": cid,
-                        "biddername": bname,
-                        "bidderaddress": baddress,
-                        "unitbid": unit,
-                        "biddeposit": deposit,
-                        "totaloffer": total,
-                        "parentglobalid": pgid
-                    }
-                }];
-
-                // Convert features to URL-encoded string
-                console.log(features)
-
-                const formData = new URLSearchParams();
-                formData.append('f', 'json');
-                formData.append('features', JSON.stringify(features));
-                // Send a POST request to your REST endpoint
-                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/addFeatures", {
-                    method: "post",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData.toString()
-                }).then(function (response) {
-                    console.log(response.data);
-                }).catch(function (error) {
-                    console.error(error);
-                });
-            });
         });
+    });
 
 
 
 
 
 
-        async function ScaledAbstract(contractId) {
-            try {
-                let saleResponse = await fetch(`https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query?where=GlobalID='${pgid}'&outFields=*&returnGeometry=false&f=json`);
-                let sale = await saleResponse.json();
+    async function ScaledAbstract(contractId) {
+        try {
+            let saleResponse = await fetch(`https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query?where=GlobalID='${pgid}'&outFields=*&returnGeometry=false&f=json`);
+            let sale = await saleResponse.json();
 
-                let ContractID = sale.features[0].attributes.ContractID;
-                console.log(pgid)
-                // Fetch bids details using AJAX
-                let bidsResponse = await fetch(`https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/query?where=parentglobalid='${pgid}'&outFields=*&returnGeometry=false&f=json`);
-                let bids = await bidsResponse.json();
+            let ContractID = sale.features[0].attributes.ContractID;
+            console.log(pgid)
+            // Fetch bids details using AJAX
+            let bidsResponse = await fetch(`https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/query?where=parentglobalid='${pgid}'&outFields=*&returnGeometry=false&f=json`);
+            let bids = await bidsResponse.json();
 
-                // Fetch PDF template
-                let pdfResponse = await fetch("./Templates/Abstract_of_Bids.pdf");
-                let pdfBuffer = await pdfResponse.arrayBuffer();
-
-
-                const { PDFDocument } = window.PDFLib;
-
-                // Load and modify the PDF
-                const pdfDoc = await PDFDocument.load(pdfBuffer);
-                const form = pdfDoc.getForm();
-
-                let date = new Date(sale.features[0].attributes.InvitationDate);
-                const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
-
-                const fieldmap = {
-                    'Timber Sale Name': sale.features[0].attributes.ContractTitle,
-                    'Invitation No': sale.features[0].attributes.InvitationID,
-                    'Bid Opening Date': formattedDate,
-                    'Legal Description': sale.features[0].attributes.TownshipRangeSection,
-                    'Contract No': sale.features[0].attributes.ContractID,
-                    'Product': sale.features[0].attributes.PrimarySpecies.replace('_', ' ')
-                    //'Name and Title': sale.features[0].attributes.PurchaserPOC
-                };
-
-                const bidsData = bids.features; // Assuming "bids" is the parsed JSON response from your AJAX request
-
-                for (let index = 0; index < bidsData.length; index++) {
-                    let bidAttributes = bidsData[index].attributes;
-                    fieldmap['BIDDER NAME AND ADDRESS' + (index + 1)] = bidAttributes['biddername'] + '\n' + bidAttributes['bidderaddress'];
-                    fieldmap[String(index + 1)] = bidAttributes['unitbid'];
-                    fieldmap[String(index + 1) + '_' + "2"] = ''; // This seems to be setting an empty value in the Python code
-                    fieldmap['BID DEPOSIT' + (index + 1)] = bidAttributes['biddeposit'];
-                }
+            // Fetch PDF template
+            let pdfResponse = await fetch("./Templates/Abstract_of_Bids.pdf");
+            let pdfBuffer = await pdfResponse.arrayBuffer();
 
 
-                console.log(fieldmap)
-                for (let fieldName in fieldmap) {
-                    const field = form.getField(fieldName);
-                    if (field) field.setText(ensureString(fieldmap[fieldName]));
-                }
+            const { PDFDocument } = window.PDFLib;
 
+            // Load and modify the PDF
+            const pdfDoc = await PDFDocument.load(pdfBuffer);
+            const form = pdfDoc.getForm();
 
-                // Serialize the modified PDF and offer it for download
-                const modifiedPdfBytes = await pdfDoc.save();
+            let date = new Date(sale.features[0].attributes.InvitationDate);
+            const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
 
-                const blob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = "Contract_" + sale.features[0].attributes.ContractTitle + "_AbstractOfBids.pdf";
-                link.click();
+            const fieldmap = {
+                'Timber Sale Name': sale.features[0].attributes.ContractTitle,
+                'Invitation No': sale.features[0].attributes.InvitationID,
+                'Bid Opening Date': formattedDate,
+                'Legal Description': sale.features[0].attributes.TownshipRangeSection,
+                'Contract No': sale.features[0].attributes.ContractID,
+                'Product': sale.features[0].attributes.PrimarySpecies.replace('_', ' ')
+                //'Name and Title': sale.features[0].attributes.PurchaserPOC
+            };
 
-            } catch (error) {
-                console.error("Error generating PDF:", error);
+            const bidsData = bids.features; // Assuming "bids" is the parsed JSON response from your AJAX request
+
+            for (let index = 0; index < bidsData.length; index++) {
+                let bidAttributes = bidsData[index].attributes;
+                fieldmap['BIDDER NAME AND ADDRESS' + (index + 1)] = bidAttributes['biddername'] + '\n' + bidAttributes['bidderaddress'];
+                fieldmap[String(index + 1)] = bidAttributes['unitbid'];
+                fieldmap[String(index + 1) + '_' + "2"] = ''; // This seems to be setting an empty value in the Python code
+                fieldmap['BID DEPOSIT' + (index + 1)] = bidAttributes['biddeposit'];
             }
+
+
+            console.log(fieldmap)
+            for (let fieldName in fieldmap) {
+                const field = form.getField(fieldName);
+                if (field) field.setText(ensureString(fieldmap[fieldName]));
+            }
+
+
+            // Serialize the modified PDF and offer it for download
+            const modifiedPdfBytes = await pdfDoc.save();
+
+            const blob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Contract_" + sale.features[0].attributes.ContractTitle + "_AbstractOfBids.pdf";
+            link.click();
+
+        } catch (error) {
+            console.error("Error generating PDF:", error);
         }
+    }
 
-        async function SumAbstract(contractId) {
-            alert(pgid)
-        }
+    async function SumAbstract(contractId) {
+        alert(pgid)
+    }
 
-        async function CheckReturn(contractId) {
-            alert(pgid)
-        }
+    async function CheckReturn(contractId) {
+        alert(pgid)
+    }
 
-        async function NoBids(contractId) {
-            alert(pgid)
-        }
-
-
-
+    async function NoBids(contractId) {
+        alert(pgid)
+    }
 
 
 
-        // Add event listener to the button
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("ScaledAbstract").addEventListener("click", function (event) {
-                event.preventDefault();
 
-                ScaledAbstract(pgid);
-            });
+
+
+    // Add event listener to the button
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("ScaledAbstract").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            ScaledAbstract(pgid);
         });
+    });
 
 
-        // Add event listener to the button
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("SumAbstract").addEventListener("click", function (event) {
-                event.preventDefault();
-                SumAbstract(pgid);
-            });
+    // Add event listener to the button
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("SumAbstract").addEventListener("click", function (event) {
+            event.preventDefault();
+            SumAbstract(pgid);
         });
+    });
 
-        // Add event listener to the button
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("CheckReturn").addEventListener("click", function (event) {
-                event.preventDefault();
-                CheckReturn(pgid);
-            });
+    // Add event listener to the button
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("CheckReturn").addEventListener("click", function (event) {
+            event.preventDefault();
+            CheckReturn(pgid);
         });
+    });
 
-        // Add event listener to the button
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("NoBids").addEventListener("click", function (event) {
-                event.preventDefault();
-                NoBids(pgid);
-            });
+    // Add event listener to the button
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("NoBids").addEventListener("click", function (event) {
+            event.preventDefault();
+            NoBids(pgid);
         });
-    </script>
-</body
+    });
+</script>
+
+</html>
