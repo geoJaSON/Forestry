@@ -10,13 +10,109 @@
     <script src="https://js.arcgis.com/4.21/"></script>
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-            font-size: 14px;
-            background-color: #00000000;
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
 
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+        }
+
+        html,
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            background-color: #00000000;
+            color: rgb(0, 0, 0);
+        }
+
+        .jumbotron {
+            background-color: #ffffff2d;
+            border: 0px solid #fff;
+            color: #ffffff;
+
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .jumbotron h2 {
+            font-weight: 700;
+        }
+
+        .jumbotron p {
+            color: #ffffff;
+        }
+
+        fieldset {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        legend {
+            color: white;
+            font-weight: bold;
+        }
+
+        .pdf-btn {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            /* width: 20%; */
+            font-size: 11px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .submit-btn input {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            width: 30%;
+            font-size: 15px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .pdf-btn:hover {
+            background-color: #ffffff56;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+        }
+
+        .submit-btn input:hover {
+            background-color: #ffffff56;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center;
         }
 
         #calendar {
@@ -24,96 +120,102 @@
             margin: 40px auto;
             padding: 0 10px;
         }
+        .fc .fc-daygrid-day-frame, .fc .fc-daygrid-day-top {
+        color: white !important;
+    }
+    
+    /* If the dates are links, you'll need to also target the anchor element */
+    .fc .fc-daygrid-day-frame a, .fc .fc-daygrid-day-top a {
+        color: white !important;
+    }
+    .fc .fc-col-header-cell-cushion {
+        color: white !important;
+    }
     </style>
+</head>
 
-    <script>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="jumbotron text-center mt-12">
+                    <div id='calendar'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script>
 
-        document.addEventListener('DOMContentLoaded', function () {
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     var calendarEl = document.getElementById('calendar');
+
+    //     var calendar = new FullCalendar.Calendar(calendarEl, {
+    //         selectable: true,
+    //         headerToolbar: {
+    //             left: 'prev,next today',
+    //             center: 'title',
+    //             right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    //         }
+    //     });
+
+    //     calendar.render();
+    // });
+
+    require([
+        "esri/identity/IdentityManager",
+        "esri/request",
+        "esri/portal/Portal",
+        "esri/portal/PortalQueryParams",
+        "dojo/domReady!"
+    ], function (IdentityManager, esriRequest, Portal, PortalQueryParams) {
+
+        var featuresPromise = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
+            responseType: "json",
+            query: {
+                where: "1=1",
+                outFields: "ContractTitle, ContractID, SaleOpeningDate, GlobalID, LoggingStartDate,LoggingEndDate,InvitationDate,IntentToAwardDate,FileDestroyDate,ClosingCoverLetterDate,CertificationToTheFilesDate",
+                f: "json"
+            }
+        });
+
+        // When data is fetched, transform it and then initialize the calendar
+        featuresPromise.then(function (response) {
+            var events = transformData(response.data.features);
+            initializeCalendar(events);
+        });
+
+        // Example transformation function
+        // Adjust field mappings as per actual data
+        function transformData(features) {
+            return features.map(function (feature) {
+                return {
+                    title: feature.attributes.ContractTitle,
+                    start: feature.attributes.SaleOpeningDate,
+                    // ... other properties
+                };
+            });
+        }
+        function initializeCalendar(events) {
+            console.log(events)
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 selectable: true,
+                events: events,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                dateClick: function (info) {
-                    alert('clicked ' + info.dateStr);
-                },
-                select: function (info) {
-                    alert('selected ' + info.startStr + ' to ' + info.endStr);
                 }
             });
 
             calendar.render();
-        });
+        }
+    });
 
-        require([
-            "esri/identity/IdentityManager",
-            "esri/request",
-            "esri/portal/Portal",
-            "esri/portal/PortalQueryParams",
-            "dojo/domReady!"
-        ], function (IdentityManager, esriRequest, Portal, PortalQueryParams) {
+</script>
 
-            var featuresPromise = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
-                responseType: "json",
-                query: {
-                    where: "1=1",
-                    outFields: "ContractTitle, ContractID, SaleOpeningDate, GlobalID, LoggingStartDate,LoggingEndDate,InvitationDate,IntentToAwardDate,FileDestroyDate,ClosingCoverLetterDate,CertificationToTheFilesDate",
-                    f: "json"
-                }
-            });
-
-            // When data is fetched, transform it and then initialize the calendar
-            featuresPromise.then(function (response) {
-                var events = transformData(response.data.features);
-                initializeCalendar(events);
-            });
-
-            // Example transformation function
-            // Adjust field mappings as per actual data
-            function transformData(features) {
-                return features.map(function (feature) {
-                    return {
-                        title: feature.attributes.ContractTitle,
-                        start: feature.attributes.SaleOpeningDate,
-                        // ... other properties
-                    };
-                });
-            }
-
-            function initializeCalendar(events) {
-                document.addEventListener('DOMContentLoaded', function () {
-                    var calendarEl = document.getElementById('calendar');
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        events: events,
-                        selectable: false,
-                        headerToolbar: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                        }
-                        // dateClick: function (info) {
-                        //     alert('clicked ' + info.dateStr);
-                        // },
-                        // select: function (info) {
-                        //     alert('selected ' + info.startStr + ' to ' + info.endStr);
-                        // }
-                    });
-                    calendar.render();
-                });
-            }
-
-        });
-
-    </script>
-</head>
-
-<body>
-    <div id='calendar'></div>
-</body>
 
 </html>

@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-        <script src="luxon.min.js"></script>
+    <script src="luxon.min.js"></script>
     <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -19,40 +19,54 @@
 <style>
     input[type="text"],
     input[type="number"],
-    select {
+    select,
+    textarea {
         width: 100%;
-    }
-    body {            background-color: #00000000;
-}
-    .form-group {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-        align-items: center;
+        padding: 12px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
     }
 
-    label {
-        display: flex;
-        flex-direction: column;
-    }
-    .jumbotron {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        .jumbotron h2 {
-            font-weight: 700;
-        }
-
-        .jumbotron p {
-            color: #6c757d;
-        }
     .submit-btn {
         display: flex;
         justify-content: center;
+    }
 
+    html,
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        background-color: #00000000;
+        color: rgb(0, 0, 0);
+    }
+
+    .jumbotron {
+        background-color: #ffffff2d;
+        border: 0px solid #fff;
+        color: #ffffff;
+
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .jumbotron h2 {
+        font-weight: 700;
+    }
+
+    .jumbotron p {
+        color: #ffffff;
+    }
+
+    fieldset {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    legend {
+        color: white;
+        font-weight: bold;
     }
 
     .pdf-btn {
@@ -77,7 +91,7 @@
         /* Adjust border size as per requirement */
         border-radius: 50px;
         /* Adjust radius as per requirement */
-        width: 20%;
+        width: 30%;
         font-size: 15px;
         color: white !important;
         margin-top: 5px;
@@ -88,19 +102,20 @@
     }
 
     .pdf-btn:hover {
-        background-color: #36387c;
+        background-color: #ffffff56;
         transform: scale(1.1);
         /* Image will zoom in slightly when hovered over */
         border: 2px solid #fff;
     }
 
     .submit-btn input:hover {
-        background-color: #36387c;
+        background-color: #ffffff56;
         transform: scale(1.1);
         /* Image will zoom in slightly when hovered over */
         border: 2px solid #fff;
         /* Add a border on hover */
     }
+
 
     .button-container {
         display: flex;
@@ -110,311 +125,377 @@
 
 <body>
 
-    <div class="container-fluid">
-        <div class="button-container">
-            <button type="button" id="ltbook" class="btn btn-secondary btn-sm pdf-btn">Load Ticket (by Load
-                Book)</button>
-            <button type="button" id="ltcert" class="btn btn-secondary btn-sm pdf-btn">Load Tickets (by Cert
-                No)</button>
-            <button type="button" id="ltdest" class="btn btn-secondary btn-sm pdf-btn">Load Tickets (by
-                Destination)</button>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+                <div class="jumbotron text-center mt-4">
+                    <div class="container-fluid">
+                        <div class="button-container">
+                            <button type="button" id="ltbook" class="btn btn-secondary btn-sm pdf-btn">Load Ticket (by
+                                Load
+                                Book)</button>
+                            <button type="button" id="ltcert" class="btn btn-secondary btn-sm pdf-btn">Load Tickets (by
+                                Cert
+                                No)</button>
+                            <button type="button" id="ltdest" class="btn btn-secondary btn-sm pdf-btn">Load Tickets (by
+                                Destination)</button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" id="scfrs" class="btn btn-secondary btn-sm pdf-btn">Stumpage Coverage
+                                (FRS)</button>
+                            <button type="button" id="scpurch" class="btn btn-secondary btn-sm pdf-btn">Stumpage
+                                Coverage
+                                (Purchaser's)</button>
+                        </div>
+                        <div class="button-container">
+                            <button type="button" id="ps" class="btn btn-secondary btn-sm pdf-btn">Purchaser's
+                                Statement</button>
+                            <button type="button" id="psdate" class="btn btn-secondary btn-sm pdf-btn">Purchaser's
+                                Statement (by
+                                Date)</button>
+                            <button type="button" id="psrock" class="btn btn-secondary btn-sm pdf-btn">Purchaser's
+                                Statement
+                                (Rock-Slash)</button>
+                            <button type="button" id="psaudit" class="btn btn-secondary btn-sm pdf-btn">Purchaser's
+                                Statement
+                                (Audit)</button>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <br>
+                        <div id="certtable"></div>
+                        <br>
+                    </div>
+                    <br>
+                    <form id="dataForm">
+                        <fieldset>
+                            <legend>Add New Certificate</legend>
+                            <!-- Row 1 -->
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="loadBookNo" name="loadBookNo">
+                                        <label for="loadBookNo" class="label-floating">Book Number</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="certificateNo" name="certificateNo">
+                                        <label for="certificateNo" class="label-floating">Certification Number</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="loadTicketNo" name="loadTicketNo">
+                                        <label for="loadTicketNo" class="label-floating">Ticket Number</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date" class="label-floating">Date</label>
+                                        <input class="form-control" type="date" id="date" name="date">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="destination" name="destination">
+                                        <label for="destination" class="label-floating">Destination</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="certificateProductProcessed"
+                                            name="certificateProductProcessed">
+                                            <option value="" disabled selected>Product</option>
+                                            <option value="None">None</option>
+                                            <option value="Firewood">Firewood</option>
+                                            <option value="FishLogs">FishLogs</option>
+                                            <option value="HogFuel">HogFuel</option>
+                                            <option value="Lumber">Lumber</option>
+                                            <option value="Paper">Paper</option>
+                                            <option value="Poles">Poles</option>
+                                            <option value="Pulp">Pulp</option>
+                                            <option value="ShakeFencing">ShakeFencing</option>
+                                            <option value="Slash">Slash</option>
+                                            <option value="Rock">Rock</option>
+                                            <option value="Scraps">Scraps</option>
+                                            <option value="Utility">Utility</option>
+                                            <option value="Veneer">Veneer</option>
+                                        </select> <label for="certificateProductProcessed"
+                                            class="label-floating">Product</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="species" name="species">
+                                            <option value="" disabled selected>Species</option>
+                                            <option value="Alder">Alder</option>
+                                            <option value="Chamarecyparis">Chamarecyparis</option>
+                                            <option value="Cottonwood">Cottonwood</option>
+                                            <option value="Douglas Fir">Douglas Fir</option>
+                                            <option value="Grand Fir">Grand Fir</option>
+                                            <option value="Pacific Madrona">Pacific Madrona</option>
+                                            <option value="Pondarosa Pine">Pondarosa Pine</option>
+                                            <option value="Red Cedar">Red Cedar</option>
+                                            <option value="White Fir">White Fir</option>
+                                            <option value="White Oak">White Oak</option>
+                                            <option value="Woody Biomass">Woody Biomass</option>
+                                        </select> <label for="species" class="label-floating">Species</label>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="row mt-2">
+                                <div class="col-md-1">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="loads" name="loads"> <label
+                                            for="loads" class="label-floating">Loads</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="acresCut" name="acresCut">
+                                        <label for="acresCut" class="label-floating">Acres Cut</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="sawlog" name="sawlog"> <label
+                                            for="sawlog" class="label-floating">Sawlog</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="utility" name="utility"> <label
+                                            for="utility" class="label-floating">Utility</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="cleanLogUtility"
+                                            name="cleanLogUtility">
+                                            <label
+                                            for="cleanLogUtility" class="label-floating">Clean Log Utility</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="payment" name="payment">
+                                        <label
+                                            for="payment" class="label-floating">Payment</label>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="otherChargesDue"
+                                            name="otherChargesDue"> <label for="otherChargesDue"
+                                            class="label-floating">Other Charges Due</label>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 4 -->
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" id="comments" name="comments"
+                                            rows="2"></textarea> <label for="comments"
+                                            class="label-floating">Comments</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="submit-btn">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="button-container">
-            <button type="button" id="scfrs" class="btn btn-secondary btn-sm pdf-btn">Stumpage Coverage (FRS)</button>
-            <button type="button" id="scpurch" class="btn btn-secondary btn-sm pdf-btn">Stumpage Coverage
-                (Purchaser's)</button>
-        </div>
-        <div class="button-container">
-            <button type="button" id="ps" class="btn btn-secondary btn-sm pdf-btn">Purchaser's Statement</button>
-            <button type="button" id="psdate" class="btn btn-secondary btn-sm pdf-btn">Purchaser's Statement (by
-                Date)</button>
-            <button type="button" id="psrock" class="btn btn-secondary btn-sm pdf-btn">Purchaser's Statement
-                (Rock-Slash)</button>
-            <button type="button" id="psaudit" class="btn btn-secondary btn-sm pdf-btn">Purchaser's Statement
-                (Audit)</button>
-        </div>
-        <hr>
-
-
-        <br>
-        <div id="certtable"></div>
-        <hr>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div class="jumbotron text-center mt-4">
-        <form id="dataForm">
-
-            <!-- Row 1 -->
-            <div class="row">
-                <div class="col-md-3">
-                    <input class="form-control" type="text" id="loadBookNo" name="loadBookNo" placeholder="Book Number">
-                </div>
-                <div class="col-md-3">
-                    <input class="form-control" type="text" id="certificateNo" name="certificateNo"
-                        placeholder="Certification Number">
-                </div>
-                <div class="col-md-3">
-                    <input class="form-control" type="text" id="loadTicketNo" name="loadTicketNo"
-                        placeholder="Ticket Number">
-                </div>
-                <div class="col-md-3">
-                    <input class="form-control" type="date" id="date" name="date" placeholder="Date">
-                </div>
-            </div>
-
-            <!-- Row 2 -->
-            <div class="row mt-2">
-                <div class="col-md-4">
-                    <input class="form-control" type="text" id="destination" name="destination"
-                        placeholder="Destination">
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select" id="certificateProductProcessed" name="certificateProductProcessed">
-                        <option value="" disabled selected>Product</option>
-                        <option value="" disabled selected>Product</option>
-
-                        <option value="None">None</option>
-                        <option value="Firewood">Firewood</option>
-                        <option value="FishLogs">FishLogs</option>
-                        <option value="HogFuel">HogFuel</option>
-                        <option value="Lumber">Lumber</option>
-                        <option value="Paper">Paper</option>
-                        <option value="Poles">Poles</option>
-                        <option value="Pulp">Pulp</option>
-                        <option value="ShakeFencing">ShakeFencing</option>
-                        <option value="Slash">Slash</option>
-                        <option value="Rock">Rock</option>
-                        <option value="Scraps">Scraps</option>
-                        <option value="Utility">Utility</option>
-                        <option value="Veneer">Veneer</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select" id="species" name="species">
-                        <option value="" disabled selected>Species</option>
-                        <option value="" disabled selected>Species</option>
-
-                        <option value="Alder">Alder</option>
-                        <option value="Chamarecyparis">Chamarecyparis</option>
-                        <option value="Cottonwood">Cottonwood</option>
-                        <option value="Douglas Fir">Douglas Fir</option>
-                        <option value="Grand Fir">Grand Fir</option>
-                        <option value="Pacific Madrona">Pacific Madrona</option>
-                        <option value="Pondarosa Pine">Pondarosa Pine</option>
-                        <option value="Red Cedar">Red Cedar</option>
-                        <option value="White Fir">White Fir</option>
-                        <option value="White Oak">White Oak</option>
-                        <option value="Woody Biomass">Woody Biomass</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Row 3 -->
-            <div class="row mt-2">
-                <div class="col-md-1">
-                    <input class="form-control" type="text" id="loads" name="loads" placeholder="Loads">
-                </div>
-                <div class="col-md-1">
-                    <input class="form-control" type="text" id="acresCut" name="acresCut" placeholder="Acres Cut">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="sawlog" name="sawlog" placeholder="Sawlog">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="utility" name="utility" placeholder="Utility">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="cleanLogUtility" name="cleanLogUtility"
-                        placeholder="Clean Log Utility">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="payment" name="payment" placeholder="Payment">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="otherChargesDue" name="otherChargesDue"
-                        placeholder="Other Charges Due">
-                </div>
-            </div>
-
-
-            <!-- Row 4 -->
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <textarea class="form-control" id="comments" name="comments" rows="2"
-                        placeholder="Comments"></textarea>
-                </div>
-            </div>
-
-            <div class="submit-btn">
-                <input type="submit" value="Submit New Bid">
-            </div>
-        </form>
-    </div></div></div></div>
-
     </div>
+</body>
 
-    <script>
-        var urlParams = new URLSearchParams(window.location.search);
-        var pgid = urlParams.get('gid');
-        var cid = urlParams.get('cid');
-        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/9/query", {
-                responseType: "json",
-                query: {
-                    where: "parentglobalid = '" + pgid + "'",
-                    outFields: "*",
-                    f: "json"
-                }
-            }).then(function (response) {
-                // Extract data
-                var tableData = response.data.features.map(function (feature) {
-                    return feature.attributes;
-                });
-
-                // Define table
-                var table = new Tabulator("#certtable", {
-                    data: tableData, //assign data to table
-                    columns: [
-                        { title: "CertificateContractNo", field: "CertificateContractNo", headerFilter: "input", visible: false },
-                        { title: "CertificateNo", field: "CertificateNo", editor: "input" },
-                        { title: "StartingScaleDate", field: "StartingScaleDate", editor: "input", formatter: "datetime" },
-                        { title: "EndingScaleDate", field: "EndingScaleDate", editor: "input", formatter: "datetime" },
-                        { title: "Loads", field: "Loads", editor: "input" },
-                        { title: "AcresCut", field: "AcresCut", editor: "input" },
-                        { title: "Sawlog", field: "Sawlog", editor: "input" },
-                        { title: "Utility", field: "Utility", editor: "input"},
-                        { title: "CleanLogUtility", field: "CleanLogUtility", editor: "input"},
-                        { title: "Slash_Rock", field: "Slash_Rock", editor: "input"},
-                        { title: "Payment", field: "Payment", editor: "input"},
-                        { title: "OtherChargesDue", field: "OtherChargesDue", editor: "input" },
-                        { title: "OtherFeesPaid", field: "OtherFeesPaid", editor: "input"},
-                        { title: "SpeciesType", field: "SpeciesType", editor: "input"},
-                        { title: "CertificateDestinationNo", field: "CertificateDestinationNo", editor: "input" },
-                        { title: "CertificateProductProcessed", field: "CertificateProductProcessed", editor: "input"},
-                        { title: "CertComments", field: "CertComments", editor: "input" },
-                        { title: "FirewoodAreaCut", field: "FirewoodAreaCut", editor: "input" },
-                        { title: "certcommentsonstateme", field: "certcommentsonstateme", editor: "input" , editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
-                        { title: "certcommentsonreport", field: "certcommentsonreport", editor: "input" , editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
-                        { title: "CVNumber", field: "CVNumber", editor: "input" },
-                        { title: "CVDate", field: "CVDate", editor: "input", formatter: "datetime"  },
-                        { title: "F_Complete", field: "F_Complete", editor: "input" },
-                        { title: "FundAcct", field: "FundAcct", editor: "input" },
-                        { title: "LoadBookNo", field: "LoadBookNo", editor: "input" },
-                        { title: "LoadTicketNo", field: "LoadTicketNo", editor: "input" },
-                        { title: "OBJECTID", field: "OBJECTID", editor: "input", visible: false }
-
-                    ]
-                });
-                table.on("cellEdited", function (cell) {
-                    //cell - cell component
-                    var field = cell.getField(); // get field name
-                    var value = cell.getValue(); // get current cell value
-                    var row = cell.getRow().getData(); // get the data for the row
-                    var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
-                    handleEdit(field, value, objectId);
-                });
-            })
-        });
-
-        function handleEdit(field, value, objectId) {
-            console.log("Updated: ", field, value, objectId);
-        }
-
-        let selectedAddress = ''; // Move this line here
-        let featureMap = new Map();
-
-        document.getElementById('dataForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            updateValues(event);
-
-        });
-
-        function updateValues(event) {
-            event.preventDefault(); // Prevent the form from submitting
-
-            // Get the current values of LoadBookNo and LoadTicketNo
-            const loadBookNoInput = document.getElementById('loadBookNo');
-            const loadTicketNoInput = document.getElementById('loadTicketNo');
-
-            const currentLoadBookNo = parseInt(loadBookNoInput.value);
-            const currentLoadTicketNo = parseInt(loadTicketNoInput.value);
-
-            loadBookNoInput.value = currentLoadBookNo; // This line is not necessary, but included for clarity
-
-            if (!isNaN(currentLoadTicketNo)) {
-                loadTicketNoInput.value = currentLoadTicketNo + 1;
-            } else {
-                loadTicketNoInput.value = 1;
+<script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/9/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
             }
+        }).then(function (response) {
+            // Extract data
+            var tableData = response.data.features.map(function (feature) {
+                return feature.attributes;
+            });
 
+            // Define table
+            var table = new Tabulator("#certtable", {
+                data: tableData, //assign data to table
+                columns: [
+                    { title: "CertificateContractNo", field: "CertificateContractNo", headerFilter: "input", visible: false },
+                    { title: "CertificateNo", field: "CertificateNo", editor: "input" },
+                    { title: "StartingScaleDate", field: "StartingScaleDate", editor: "input", formatter: "datetime" },
+                    { title: "EndingScaleDate", field: "EndingScaleDate", editor: "input", formatter: "datetime" },
+                    { title: "Loads", field: "Loads", editor: "input" },
+                    { title: "AcresCut", field: "AcresCut", editor: "input" },
+                    { title: "Sawlog", field: "Sawlog", editor: "input" },
+                    { title: "Utility", field: "Utility", editor: "input" },
+                    { title: "CleanLogUtility", field: "CleanLogUtility", editor: "input" },
+                    { title: "Slash_Rock", field: "Slash_Rock", editor: "input" },
+                    { title: "Payment", field: "Payment", editor: "input" },
+                    { title: "OtherChargesDue", field: "OtherChargesDue", editor: "input" },
+                    { title: "OtherFeesPaid", field: "OtherFeesPaid", editor: "input" },
+                    { title: "SpeciesType", field: "SpeciesType", editor: "input" },
+                    { title: "CertificateDestinationNo", field: "CertificateDestinationNo", editor: "input" },
+                    { title: "CertificateProductProcessed", field: "CertificateProductProcessed", editor: "input" },
+                    { title: "CertComments", field: "CertComments", editor: "input" },
+                    { title: "FirewoodAreaCut", field: "FirewoodAreaCut", editor: "input" },
+                    { title: "certcommentsonstateme", field: "certcommentsonstateme", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "certcommentsonreport", field: "certcommentsonreport", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "CVNumber", field: "CVNumber", editor: "input" },
+                    { title: "CVDate", field: "CVDate", editor: "input", formatter: "datetime" },
+                    { title: "F_Complete", field: "F_Complete", editor: "input" },
+                    { title: "FundAcct", field: "FundAcct", editor: "input" },
+                    { title: "LoadBookNo", field: "LoadBookNo", editor: "input" },
+                    { title: "LoadTicketNo", field: "LoadTicketNo", editor: "input" },
+                    { title: "OBJECTID", field: "OBJECTID", editor: "input", visible: false }
+
+                ]
+            });
+            table.on("cellEdited", function (cell) {
+                //cell - cell component
+                var field = cell.getField(); // get field name
+                var value = cell.getValue(); // get current cell value
+                var row = cell.getRow().getData(); // get the data for the row
+                var objectId = row.OBJECTID; //assuming OBJECTID is a field in your data
+                handleEdit(field, value, objectId);
+            });
+        })
+    });
+
+    function handleEdit(field, value, objectId) {
+        console.log("Updated: ", field, value, objectId);
+    }
+
+    let selectedAddress = ''; // Move this line here
+    let featureMap = new Map();
+
+    document.getElementById('dataForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        updateValues(event);
+
+    });
+
+    function updateValues(event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        // Get the current values of LoadBookNo and LoadTicketNo
+        const loadBookNoInput = document.getElementById('loadBookNo');
+        const loadTicketNoInput = document.getElementById('loadTicketNo');
+
+        const currentLoadBookNo = parseInt(loadBookNoInput.value);
+        const currentLoadTicketNo = parseInt(loadTicketNoInput.value);
+
+        loadBookNoInput.value = currentLoadBookNo; // This line is not necessary, but included for clarity
+
+        if (!isNaN(currentLoadTicketNo)) {
+            loadTicketNoInput.value = currentLoadTicketNo + 1;
+        } else {
+            loadTicketNoInput.value = 1;
         }
-        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], 
+
+    }
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
         function (IdentityManager, esriRequest) {
             // Fetch the data when the document is ready
-                function updateValues(event) {
-                    event.preventDefault();
-                    const dateInput = document.getElementById('date').value;
-                    const date = new Date(dateInput);
-                    const StartingScaleDate = Math.floor(date.getTime() / 1000);
-                    const LoadBookNo = document.getElementById('loadBookNo').value;
-                    const LoadTicketNo = parseInt(document.getElementById('loadTicketNo').value);
-                    const CertificateNo = document.getElementById('certificateNo').value;
-                    const Destination = document.getElementById('destination').value;
-                    const CertificateProductProcessed = document.getElementById('certificateProductProcessed').value;
-                    const Species = document.getElementById('species').value;
-                    const Loads = document.getElementById('loads').value;
-                    const AcresCut = document.getElementById('acresCut').value;
-                    const Sawlog = document.getElementById('sawlog').value;
-                    const Utility = document.getElementById('utility').value;
-                    const CleanLogUtility = document.getElementById('cleanLogUtility').value;
-                    const SlashRock = document.getElementById('slashRock').value;
-                    const Payment = document.getElementById('payment').value;
-                    const OtherChargesDue = document.getElementById('otherChargesDue').value;
+            function updateValues(event) {
+                event.preventDefault();
+                const dateInput = document.getElementById('date').value;
+                const date = new Date(dateInput);
+                const StartingScaleDate = Math.floor(date.getTime() / 1000);
+                const LoadBookNo = document.getElementById('loadBookNo').value;
+                const LoadTicketNo = parseInt(document.getElementById('loadTicketNo').value);
+                const CertificateNo = document.getElementById('certificateNo').value;
+                const Destination = document.getElementById('destination').value;
+                const CertificateProductProcessed = document.getElementById('certificateProductProcessed').value;
+                const Species = document.getElementById('species').value;
+                const Loads = document.getElementById('loads').value;
+                const AcresCut = document.getElementById('acresCut').value;
+                const Sawlog = document.getElementById('sawlog').value;
+                const Utility = document.getElementById('utility').value;
+                const CleanLogUtility = document.getElementById('cleanLogUtility').value;
+                const SlashRock = document.getElementById('slashRock').value;
+                const Payment = document.getElementById('payment').value;
+                const OtherChargesDue = document.getElementById('otherChargesDue').value;
 
-                    const features = [{
-                        "attributes": {
-                            "LoadBookNo": LoadBookNo,
-                            "LoadTicketNo": LoadTicketNo,
-                            "StartingScaleDate": StartingScaleDate,
-                            "CertificateNo ": CertificateNo,
-                            "Destination": Destination,
-                            "CertificateProductProcessed": CertificateProductProcessed,
-                            "Species": Species,
-                            "Loads": Loads,
-                            "AcresCut": AcresCut,
-                            "Sawlog": Sawlog,
-                            "Utility": Utility,
-                            "CleanLogUtility": CleanLogUtility,
-                            "SlashRock": SlashRock,
-                            "Payment": Payment,
-                            "OtherChargesDue": OtherChargesDue,
-                            "parentglobalid": pgid
-                        }
-                    }];
+                const features = [{
+                    "attributes": {
+                        "LoadBookNo": LoadBookNo,
+                        "LoadTicketNo": LoadTicketNo,
+                        "StartingScaleDate": StartingScaleDate,
+                        "CertificateNo ": CertificateNo,
+                        "Destination": Destination,
+                        "CertificateProductProcessed": CertificateProductProcessed,
+                        "Species": Species,
+                        "Loads": Loads,
+                        "AcresCut": AcresCut,
+                        "Sawlog": Sawlog,
+                        "Utility": Utility,
+                        "CleanLogUtility": CleanLogUtility,
+                        "SlashRock": SlashRock,
+                        "Payment": Payment,
+                        "OtherChargesDue": OtherChargesDue,
+                        "parentglobalid": pgid
+                    }
+                }];
 
-                    const formData = new URLSearchParams();
-                    formData.append('f', 'json');
-                    formData.append('features', JSON.stringify(features));
-                    console.log(features);
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                console.log(features);
 
-                    esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/9/addFeatures ", {
-                        method: "post ",
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: formData.toString()
-                    }).then(function (response) {
-                        console.log(response.data);
-                    }).catch(function (error) {
-                        console.error(error);
-                    });
-                }
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/9/addFeatures ", {
+                    method: "post ",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function (response) {
+                    console.log(response.data);
+                }).catch(function (error) {
+                    console.error(error);
+                });
+            }
 
-          
+
         });
-    </script>
-</body>
+</script>
 
 </html>
