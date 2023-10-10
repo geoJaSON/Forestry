@@ -42,7 +42,8 @@
         }
 
         .jumbotron {
-            background-color: #ffffff2d;
+            /* backdrop-filter: blur(5px); */
+            background: rgba(0, 0, 0, 0.5);
             border: 0px solid #fff;
             color: #ffffff;
 
@@ -364,7 +365,13 @@
 
                 if (selectedFeature) {
                     selectedAddress = selectedFeature.attributes.ContactStreet1;
+                    bidderphone = selectedFeature.attributes.ContactPhone;
+                    bidderemail = selectedFeature.attributes.ContactEMail1;
+                    bidderpoc = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
                     document.getElementById('bidderaddress').value = selectedAddress;
+                    document.getElementById('bidderphone').value = bidderphone;
+                    document.getElementById('bidderemail').value = bidderemail;
+                    document.getElementById('bidderpoc').value = bidderpoc;
                     console.log('Selected Address:', selectedAddress);
                 }
             });
@@ -380,7 +387,13 @@
 
                 if (selectedFeature) {
                     selectedAddress = selectedFeature.attributes.ContactStreet1;
+                    bidderphone = selectedFeature.attributes.ContactPhone;
+                    bidderemail = selectedFeature.attributes.ContactEMail1;
+                    bidderpoc = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
                     document.getElementById('bidderaddress').value = selectedAddress;
+                    document.getElementById('bidderphone').value = bidderphone;
+                    document.getElementById('bidderemail').value = bidderemail;
+                    document.getElementById('bidderpoc').value = bidderpoc;
                     console.log('Selected Address:', selectedAddress);
                 }
             });
@@ -469,8 +482,8 @@
                 'Bid Opening Date': formattedDate,
                 'Legal Description': sale.features[0].attributes.TownshipRangeSection,
                 'Contract No': sale.features[0].attributes.ContractID,
-                'Product': sale.features[0].attributes.PrimarySpecies.replace('_', ' ')
-                //'Name and Title': sale.features[0].attributes.PurchaserPOC
+                'Product': sale.features[0].attributes.PrimarySpecies.replace('_', ' '),
+                'Name and Title': sale.features[0].attributes.AwardCoverLetterSigner
             };
 
             const bidsData = bids.features; // Assuming "bids" is the parsed JSON response from your AJAX request

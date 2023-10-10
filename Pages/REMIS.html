@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Task List with Checkboxes</title>
+    <style>
+        body {
+            padding: 20px;
+            background-color: #00000000;
+            font-family: Arial, sans-serif;
+        }
+
+        #listContainer {
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #listContainer .taskType {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        #listContainer .taskItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        #listContainer .taskItem .taskDetails {
+            flex-grow: 1;
+        }
+
+        .checkbox-container {
+            padding: 5px;
+        }
+
+        .jumbotron {
+            /* backdrop-filter: blur(5px); */
+            background: rgba(0, 0, 0, 0.5);
+            border: 0px solid #fff;
+            color: #ffffff;
+
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .jumbotron h2 {
+            font-weight: 700;
+        }
+
+        .jumbotron p {
+            color: #ffffff;
+        }
+        .btn  {
+            display: flex;
+            justify-content: center;
+
+        }
+        .btn {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            width: 20%;
+            font-size: 15px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+       
+        .btn:hover {
+            background-color: #00904fb1;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }
+        #tasks-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 10px; /* Space between cards */
+}
+
+.card {
+    flex: 0 0 calc(50% - 10px); /* each card will take up 50% of the container width, minus 10px for the gap */
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .card {
+        flex: 0 0 100%; /* On small screens, revert to vertical stacking */
+    }
+}
+    </style>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.21/"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="jumbotron text-center mt-8">
+                    <div id="tasks-container" class="container">
+                        <!-- Tasks will be appended here through JavaScript -->
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
+
+    require([
+        "esri/identity/IdentityManager",
+        "esri/request",
+        "dojo/domReady!"
+    ], function (IdentityManager, esriRequest) {
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
+            responseType: "json",
+            query: {
+                where: "GlobalID = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
+            }
+        }).then(function (response) {
+            renderTasks(response.data);
+        });
+    });
+
+    const taskAliases = {
+    SaleOpeningDate: 'RD22 Primary',
+    LoggingStartDate: 'RD22 Appraisal',
+    // Add other tasks as needed
+};
+
+    function renderTasks(attributes) {
+    const container = document.getElementById('tasks-container');
+    const tasks = ['SaleOpeningDate', 'LoggingStartDate'];
+
+    tasks.forEach(task => {
+        const taskStatus = attributes[task]; // Assuming your API response contains a Boolean or Date to signify completion
+
+        let displayName = taskAliases[task] || task; // Use the alias if available, otherwise use the task name
+
+        let taskElement = `
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">${displayName}</h5>
+                <p class="card-text">${taskStatus ? `Completed on ${taskStatus}` : 'Not completed'}</p>
+                ${!taskStatus ? '<button onclick="completeTask(\'' + task + '\')" class="btn btn-primary">Mark as Done</button>' : ''}
+            </div>
+        </div>`;
+
+        container.insertAdjacentHTML('beforeend', taskElement);
+    });
+}
+
+
+function completeTask(taskName) {
+  // Complete to push date to GIS
+}
+
+</script>
+
+
+
+</html>

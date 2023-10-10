@@ -10,19 +10,19 @@
             background-color: #00000000;
             font-family: Arial, sans-serif;
         }
-        
+
         #listContainer {
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         #listContainer .taskType {
             margin-top: 20px;
             font-weight: bold;
             color: #ffffff;
         }
-        
+
         #listContainer .taskItem {
             display: flex;
             justify-content: space-between;
@@ -30,16 +30,18 @@
             border-bottom: 1px solid #ddd;
             padding: 10px 0;
         }
-        
+
         #listContainer .taskItem .taskDetails {
             flex-grow: 1;
         }
-        
+
         .checkbox-container {
             padding: 5px;
         }
+
         .jumbotron {
-            background-color: #ffffff2d;
+            /* backdrop-filter: blur(5px); */
+            background: rgba(0, 0, 0, 0.5);
             border: 0px solid #fff;
             color: #ffffff;
 
@@ -67,116 +69,124 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="jumbotron text-center mt-4">
-        <div id="listContainer" class="col-md-8 offset-md-2"></div>
-    </div></div></div></div>
+                    <div id="listContainer" class="col-md-8 offset-md-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-    <script>
-        var urlParams = new URLSearchParams(window.location.search);
-        var pgid = urlParams.get('gid');
-        require([
-            "esri/identity/IdentityManager",
-            "esri/request",
-            "dojo/domReady!"
-        ], function(IdentityManager, esriRequest) {
-            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query", {
-                responseType: "json",
-                query: {
-                    where: "parentglobalid = '" + pgid + "'",
-                    outFields: "*",
-                    f: "json"
-                }
-            }).then(function(response) {
-                // User is already signed in
-                loadData(response.data);
-            }).catch(function(error) {
-                // Error occurred (possibly because the user is not signed in)
-                IdentityManager.getCredential("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query?where=1=1&outFields=*&f=pjson")
-                    .then(function(credential) {
-                        // Try to load the data again
-                        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query?where=1=1&outFields=*&f=pjson", {
-                            responseType: "json",
-                            query: {
-                                where: "parentglobalid = '" + pgid + "'",
-                                outFields: "*",
-                                f: "json"
-                            }
-                        }).then(function(response) {
-                            loadData(response.data);
-                        });
+<script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var pgid = urlParams.get('gid');
+    require([
+        "esri/identity/IdentityManager",
+        "esri/request",
+        "dojo/domReady!"
+    ], function (IdentityManager, esriRequest) {
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
+            }
+        }).then(function (response) {
+            // User is already signed in
+            loadData(response.data);
+        }).catch(function (error) {
+            // Error occurred (possibly because the user is not signed in)
+            IdentityManager.getCredential("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query?where=1=1&outFields=*&f=pjson")
+                .then(function (credential) {
+                    // Try to load the data again
+                    esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/query?where=1=1&outFields=*&f=pjson", {
+                        responseType: "json",
+                        query: {
+                            where: "parentglobalid = '" + pgid + "'",
+                            outFields: "*",
+                            f: "json"
+                        }
+                    }).then(function (response) {
+                        loadData(response.data);
                     });
-            });
+                });
+        });
 
-            function loadData(data) {
+        function loadData(data) {
 
-                let listContainer = document.getElementById('listContainer');
+            let listContainer = document.getElementById('listContainer');
 
-                let tasksByType = {};
-                for (let feature of data.features) {
-                    let taskType = feature.attributes.TaskType;
-                    if (!tasksByType[taskType]) {
-                        tasksByType[taskType] = [];
-                    }
-                    tasksByType[taskType].push(feature);
+            let tasksByType = {};
+            for (let feature of data.features) {
+                let taskType = feature.attributes.TaskType;
+                if (!tasksByType[taskType]) {
+                    tasksByType[taskType] = [];
                 }
-
-                for (let taskType in tasksByType) {
-                    let taskTypeHeader = document.createElement('h2');
-                    taskTypeHeader.textContent = taskType;
-                    taskTypeHeader.classList.add('taskType');
-                    listContainer.appendChild(taskTypeHeader);
-
-                    for (let feature of tasksByType[taskType]) {
-                        let checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.checked = feature.attributes.TaskDateComplete !== null;
-
-                        checkbox.onchange = function() {
-                            if (checkbox.checked) {
-                                const features = [{
-                                    attributes: {
-                                        OBJECTID: feature.attributes.OBJECTID,
-                                        TaskDateComplete: new Date().getTime()
-                                    }
-                                }];
-
-                                // Convert features to URL-encoded string
-                                const formData = new URLSearchParams();
-                                formData.append('f', 'json');
-                                formData.append('updates', JSON.stringify(features));
-                                console.log(features);
-                                // Send a POST request to your REST endpoint
-                                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/applyEdits", {
-                                    method: "post",
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    },
-                                    body: formData.toString()
-                                }).then(function(response) {
-                                    console.log(response.data);
-                                }).catch(function(error) {
-                                    console.error(error);
-                                })
-                            }
-                        };
-
-
-                        let detailsDiv = document.createElement('div');
-                        detailsDiv.classList.add('taskDetails');
-                        detailsDiv.textContent = feature.attributes.TaskID + "- " + feature.attributes.TaskDescription;
-
-                        let taskItemDiv = document.createElement('div');
-                        taskItemDiv.classList.add('taskItem');
-                        taskItemDiv.appendChild(detailsDiv);
-                        taskItemDiv.appendChild(checkbox);
-
-                        listContainer.appendChild(taskItemDiv);
-                    }
-                }
+                tasksByType[taskType].push(feature);
             }
 
+            for (let taskType in tasksByType) {
+                let taskTypeHeader = document.createElement('h2');
+                taskTypeHeader.textContent = taskType;
+                taskTypeHeader.classList.add('taskType');
+                listContainer.appendChild(taskTypeHeader);
 
+                // Sort tasks by TaskID within their groups
+        tasksByType[taskType].sort((a, b) => {
+            return a.attributes.TaskID - b.attributes.TaskID;
         });
-    </script>
+
+                for (let feature of tasksByType[taskType]) {
+                    let checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = feature.attributes.TaskDateComplete !== null;
+
+                    checkbox.onchange = function () {
+                        if (checkbox.checked) {
+                            const features = [{
+                                attributes: {
+                                    OBJECTID: feature.attributes.OBJECTID,
+                                    TaskDateComplete: new Date().getTime()
+                                }
+                            }];
+
+                            // Convert features to URL-encoded string
+                            const formData = new URLSearchParams();
+                            formData.append('f', 'json');
+                            formData.append('updates', JSON.stringify(features));
+                            console.log(features);
+                            // Send a POST request to your REST endpoint
+                            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/10/applyEdits", {
+                                method: "post",
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: formData.toString()
+                            }).then(function (response) {
+                                console.log(response.data);
+                            }).catch(function (error) {
+                                console.error(error);
+                            })
+                        }
+                    };
+
+
+                    let detailsDiv = document.createElement('div');
+                    detailsDiv.classList.add('taskDetails');
+                    detailsDiv.textContent = feature.attributes.TaskID + "- " + feature.attributes.TaskDescription;
+
+                    let taskItemDiv = document.createElement('div');
+                    taskItemDiv.classList.add('taskItem');
+                    taskItemDiv.appendChild(detailsDiv);
+                    taskItemDiv.appendChild(checkbox);
+
+                    listContainer.appendChild(taskItemDiv);
+                }
+            }
+        }
+
+
+    });
+</script>
 
 
 </html>

@@ -41,7 +41,8 @@
     }
 
     .jumbotron {
-        background-color: #ffffff2d;
+        /* backdrop-filter: blur(5px); */
+        background: rgba(0, 0, 0, 0.5);
         border: 0px solid #fff;
         color: #ffffff;
 
@@ -184,18 +185,19 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" type="text" id="certificateNo" name="certificateNo">
-                                        <label for="certificateNo" class="label-floating">Certification Number</label>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-floating mb-3">
                                         <input class="form-control" type="text" id="loadTicketNo" name="loadTicketNo">
                                         <label for="loadTicketNo" class="label-floating">Ticket Number</label>
 
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="certificateNo" name="certificateNo">
+                                        <label for="certificateNo" class="label-floating">Certification Number</label>
+
+                                    </div>
+                                </div>
+                                
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="date" class="label-floating">Date</label>

@@ -37,10 +37,9 @@
             /* optional: a soft shadow for depth */
         }
         .blur-div {
-  backdrop-filter: blur(5px);
-  background: rgba(0, 0, 0, 0.1);
-  padding: 50px;
-  border-radius: 10px;
+  backdrop-filter: blur(1px);
+  background: rgba(0, 0, 0, 0.3);
+
 }
         html,
         body {
@@ -186,7 +185,7 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-2 blur-div">
                 <div class="navbar-brand">
                     <br>
                     <img src="logo2.png" width="60%" alt="Logo" onclick="loadPage('./home.html')" class="logo">
@@ -267,7 +266,7 @@
                 </div>
 
             </div>
-            <div class="col-md-10 blur-div">
+            <div class="col-md-10">
                 
                 <iframe id="subPageFrame" name="subPageFrame" style="width:100%; height:100%; border:none;"></iframe>
 
