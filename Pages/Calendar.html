@@ -121,17 +121,21 @@
             margin: 40px auto;
             padding: 0 10px;
         }
-        .fc .fc-daygrid-day-frame, .fc .fc-daygrid-day-top {
-        color: white !important;
-    }
-    
-    /* If the dates are links, you'll need to also target the anchor element */
-    .fc .fc-daygrid-day-frame a, .fc .fc-daygrid-day-top a {
-        color: white !important;
-    }
-    .fc .fc-col-header-cell-cushion {
-        color: white !important;
-    }
+
+        .fc .fc-daygrid-day-frame,
+        .fc .fc-daygrid-day-top {
+            color: white !important;
+        }
+
+        /* If the dates are links, you'll need to also target the anchor element */
+        .fc .fc-daygrid-day-frame a,
+        .fc .fc-daygrid-day-top a {
+            color: white !important;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+            color: white !important;
+        }
     </style>
 </head>
 
@@ -145,7 +149,7 @@
             </div>
         </div>
     </div>
-    
+
 </body>
 <script>
 
@@ -164,57 +168,51 @@
     //     calendar.render();
     // });
 
-    require([
-        "esri/identity/IdentityManager",
-        "esri/request",
-        "esri/portal/Portal",
-        "esri/portal/PortalQueryParams",
-        "dojo/domReady!"
-    ], function (IdentityManager, esriRequest, Portal, PortalQueryParams) {
+    require(["esri/identity/IdentityManager", "esri/request", "esri/portal/Portal", "esri/portal/PortalQueryParams", "dojo/domReady!"],
+        function (IdentityManager, esriRequest, Portal, PortalQueryParams) {
 
-        var featuresPromise = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
-            responseType: "json",
-            query: {
-                where: "1=1",
-                outFields: "ContractTitle, ContractID, SaleOpeningDate, GlobalID, LoggingStartDate,LoggingEndDate,InvitationDate,IntentToAwardDate,FileDestroyDate,ClosingCoverLetterDate,CertificationToTheFilesDate",
-                f: "json"
-            }
-        });
-
-        // When data is fetched, transform it and then initialize the calendar
-        featuresPromise.then(function (response) {
-            var events = transformData(response.data.features);
-            initializeCalendar(events);
-        });
-
-        // Example transformation function
-        // Adjust field mappings as per actual data
-        function transformData(features) {
-            return features.map(function (feature) {
-                return {
-                    title: feature.attributes.ContractTitle,
-                    start: feature.attributes.SaleOpeningDate,
-                    // ... other properties
-                };
-            });
-        }
-        function initializeCalendar(events) {
-            console.log(events)
-            var calendarEl = document.getElementById('calendar');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                selectable: true,
-                events: events,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/query", {
+                responseType: "json",
+                query: {
+                    where: "1=1",
+                    outFields: "ContractTitle, ContractID, GlobalID,CertificationToTheFilesDate,ClosingCoverLetterDate,ContractSignDate,FileDestroyDate,IntentToAwardDate,InvitationDate,LoggingEndDate,LoggingStartDate,SaleOpeningDate",
+                    f: "json"
                 }
-            });
 
-            calendar.render();
-        }
-    });
+            }).then(function (response) {
+                //parse dates into individual records
+                let events = [];
+                response.data.features.forEach(function (feature) {
+                    let attributes = feature.attributes;
+                    // Iterate over all date fields
+                    ["CertificationToTheFilesDate", "ClosingCoverLetterDate", "ContractSignDate", "FileDestroyDate", "IntentToAwardDate", "InvitationDate", "LoggingEndDate", "LoggingStartDate", "SaleOpeningDate"].forEach(function (dateFieldName) {
+                        if (attributes[dateFieldName]) {
+                            events.push({
+                                title: `${attributes.ContractID}-${dateFieldName}`,
+                                start: new Date(attributes[dateFieldName]),
+                                allDay: true
+                            });
+
+                        }
+                    });
+                });
+
+                var calendarEl = document.getElementById('calendar');
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    selectable: true,
+                    events: events,  // Parsed data from feature service
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    }
+                });
+
+                calendar.render();
+            });
+        });
+
 
 </script>
 

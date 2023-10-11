@@ -316,8 +316,35 @@
     });
 
     function handleEdit(field, value, objectId) {
-        console.log("Updated: ", field, value, objectId);
+        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
+            function (IdentityManager, esriRequest) {
+                console.log(field, value, objectId)
+                // Fetch the data when the document is ready
 
+                const features = [{
+                    "attributes": {
+                        "OBJECTID": objectId,
+                        [field]: value
+                    }
+                }];
+
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                console.log(features);
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/updateFeatures ", {
+                    method: "post ",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function (response) {
+                    console.log(response.data);
+                }).catch(function (error) {
+                    console.error(error);
+                });
+
+            });
     }
 
 

@@ -140,30 +140,39 @@
                 f: "json"
             }
         }).then(function (response) {
-            renderTasks(response.data);
+            renderTasks(response.data.features[0].attributes);
         });
     });
 
     const taskAliases = {
     SaleOpeningDate: 'RD22 Primary',
     LoggingStartDate: 'RD22 Appraisal',
+    LoggingEndDate: 'RD112',
+    InvitationDate: 'RD4',
+    IntentToAwardDate: 'RD82',
+    FileDestroyDate: 'RD6'
     // Add other tasks as needed
 };
+function formatTimestamp(timestamp) {
+    const options = { day: '2-digit', month: 'short', year: '2-digit' };
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', options).toUpperCase();
+}
 
     function renderTasks(attributes) {
     const container = document.getElementById('tasks-container');
-    const tasks = ['SaleOpeningDate', 'LoggingStartDate'];
+    const tasks = ["FileDestroyDate", "IntentToAwardDate", "InvitationDate", "LoggingEndDate", "LoggingStartDate", "SaleOpeningDate"];
 
     tasks.forEach(task => {
         const taskStatus = attributes[task]; // Assuming your API response contains a Boolean or Date to signify completion
-
+        console.log(taskStatus);
         let displayName = taskAliases[task] || task; // Use the alias if available, otherwise use the task name
 
         let taskElement = `
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">${displayName}</h5>
-                <p class="card-text">${taskStatus ? `Completed on ${taskStatus}` : 'Not completed'}</p>
+                <p class="card-text">${taskStatus ? `Completed on ${formatTimestamp(taskStatus)}` : 'Not completed'}</p>
                 ${!taskStatus ? '<button onclick="completeTask(\'' + task + '\')" class="btn btn-primary">Mark as Done</button>' : ''}
             </div>
         </div>`;

@@ -215,7 +215,6 @@
                     { title: "Species", field: "VolSpecies" },
                     { title: "Volumne Est MBF", field: "VolEstMBF", editor: "input", bottomCalc: "sum" },
                     { title: "Pencil Buck Inches", field: "PencilBuckInches" },
-
                     { title: "OBJECTID", field: "OBJECTID", editor: "input", visible: false }
 
                 ]
@@ -232,57 +231,15 @@
     });
 
     function handleEdit(field, value, objectId) {
-        console.log("Updated: ", field, value, objectId);
-    }
-
-    let selectedAddress = ''; // Move this line here
-    let featureMap = new Map();
-
-    document.getElementById('dataForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-        updateValues(event);
-
-    });
-
-    function updateValues(event) {
-        event.preventDefault(); // Prevent the form from submitting
-
-        // Get the current values of LoadBookNo and LoadTicketNo
-        const loadBookNoInput = document.getElementById('loadBookNo');
-        const loadTicketNoInput = document.getElementById('loadTicketNo');
-
-        const currentLoadBookNo = parseInt(loadBookNoInput.value);
-        const currentLoadTicketNo = parseInt(loadTicketNoInput.value);
-
-        loadBookNoInput.value = currentLoadBookNo; // This line is not necessary, but included for clarity
-
-        if (!isNaN(currentLoadTicketNo)) {
-            loadTicketNoInput.value = currentLoadTicketNo + 1;
-        } else {
-            loadTicketNoInput.value = 1;
-        }
-
-    }
-    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
-        function (IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
-            function updateValues(event) {
-                event.preventDefault();
-                const dateInput = document.getElementById('date').value;
-                const date = new Date(dateInput);
-                const StartingScaleDate = Math.floor(date.getTime() / 1000);
-                const LoadBookNo = document.getElementById('loadBookNo').value;
-                const LoadTicketNo = parseInt(document.getElementById('loadTicketNo').value);
-                const CertificateNo = document.getElementById('certificateNo').value;
+        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
+            function (IdentityManager, esriRequest) {
+                console.log(field, value, objectId)
+                // Fetch the data when the document is ready
 
                 const features = [{
                     "attributes": {
-                        "LoadBookNo": LoadBookNo,
-                        "LoadTicketNo": LoadTicketNo,
-                        "StartingScaleDate": StartingScaleDate,
-                        "CertificateNo ": CertificateNo,
-
-                        "parentglobalid": pgid
+                        "OBJECTID": objectId,
+                        [field]: value
                     }
                 }];
 
@@ -290,8 +247,7 @@
                 formData.append('f', 'json');
                 formData.append('features', JSON.stringify(features));
                 console.log(features);
-
-                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/9/addFeatures ", {
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/7/updateFeatures ", {
                     method: "post ",
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -302,10 +258,62 @@
                 }).catch(function (error) {
                     console.error(error);
                 });
-            }
+
+            });
+    }
+
+    let selectedAddress = ''; // Move this line here
+    let featureMap = new Map();
+
+    document.getElementById('dataForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
+            function (IdentityManager, esriRequest) {
+                // Fetch the data when the document is ready
+                const vol = document.getElementById('VolEstMBF');
+                const VolEstMBF = parseInt(vol.value);
+
+                const VolSpecies = document.getElementById('VolSpecies').value;
+
+                const pbi = document.getElementById('PencilBuckInches');
+                const PencilBuckInches = parseInt(pbi.value);
+
+                const features = [{
+                    "attributes": {
+                        "VolEstMBF": VolEstMBF,
+                        "VolSpecies": VolSpecies,
+                        "PencilBuckInches": PencilBuckInches,
+                        "parentglobalid": pgid
+                    }
+                }];
+
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                console.log(features);
+
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/7/addFeatures ", {
+                    method: "post ",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function (response) {
+                    console.log(response.data);
+                    document.getElementById('subPageFrame').contentWindow.location.reload();
+
+                }).catch(function (error) {
+                    console.error(error);
+                });
 
 
-        });
+
+            });
+    });
+
+
+
 </script>
 
 </html>
