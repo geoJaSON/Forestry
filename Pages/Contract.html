@@ -406,7 +406,7 @@
                             </div>
                         </fieldset>
                         <div class="submit-btn">
-                            <input type="submit" value="Submit Edits">
+                            <input type="submit" id="submitButton" value="Submit Edits">
                         </div>
                     </form>
                 </div>
@@ -589,16 +589,25 @@
                     formData.append('updates', JSON.stringify(features));
 
                     // Send a POST request to your REST endpoint
-                    esriRequest("https://arcportal-ucop-dev.eis.pd.usace.army.mil/arcgis/rest/services/Forestry_Dev/FeatureServer/0/applyEdits", {
+                    esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/applyEdits", {
                         method: "post",
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
                         body: formData.toString()
                     }).then(function (response) {
-                        console.log(response.data);
-                    }).catch(function (error) {
-                        console.error(error);
+                        const success = response.data.updateResults[0];
+                        const submitButton = document.getElementById('submitButton');  // Selecting the button
+
+                        if (success) {
+                            submitButton.value = 'SUCCESS!';
+                        } else {
+                            submitButton.value = 'FAILED!';
+                        }
+
+                        setTimeout(() => {
+                            submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                        }, 3000);
                     });
                 });
             }).catch(error => {
@@ -607,4 +616,5 @@
             });;
     });
 </script>
+
 </html>
