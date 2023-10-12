@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="luxon.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
+</head>
+<style>
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+    }
+
+    html,
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        background-color: #00000000;
+        color: rgb(0, 0, 0);
+    }
+
+    .jumbotron {
+        /* backdrop-filter: blur(5px); */
+        background: rgba(0, 0, 0, 0.5);
+        border: 0px solid #fff;
+        color: #ffffff;
+
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .jumbotron h2 {
+        font-weight: 700;
+    }
+
+    .jumbotron p {
+        color: #ffffff;
+    }
+
+    fieldset {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    legend {
+        color: white;
+        font-weight: bold;
+    }
+
+    .pdf-btn {
+        background-color: #00904fb1;
+        border: 1px solid white;
+        /* Adjust border size as per requirement */
+        border-radius: 50px;
+        /* Adjust radius as per requirement */
+        /* width: 20%; */
+        font-size: 11px;
+        color: white !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* Adds space between items */
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+
+    .submit-btn input {
+        background-color: #00904fb1;
+        border: 1px solid white;
+        /* Adjust border size as per requirement */
+        border-radius: 50px;
+        /* Adjust radius as per requirement */
+        width: 30%;
+        font-size: 15px;
+        color: white !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /* Adds space between items */
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+
+    .pdf-btn:hover {
+        background-color: #ffffff56;
+        transform: scale(1.1);
+        /* Image will zoom in slightly when hovered over */
+        border: 2px solid #fff;
+    }
+
+    .submit-btn input:hover {
+        background-color: #ffffff56;
+        transform: scale(1.1);
+        /* Image will zoom in slightly when hovered over */
+        border: 2px solid #fff;
+        /* Add a border on hover */
+    }
+
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="jumbotron text-center mt-4" id="report-container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    function formatTimestamp(timestamp) {
+        const options = { day: '2-digit', month: 'short', year: '2-digit' };
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('en-US', options).toUpperCase();
+    }
+    require(["esri/identity/IdentityManager", "esri/request", "esri/portal/Portal",
+        "esri/portal/PortalQueryParams", "dojo/domReady!"
+    ], function (IdentityManager, esriRequest, Portal, PortalQueryParams) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var pgid = urlParams.get('gid');
+
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/11/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "insp_date,operator,purchaser,remarks,OBJECTID",
+                returnGeometry: true,
+                f: "json"
+            }
+        }).then(function (response) {
+            // Assuming `features` is an array containing your inspection reports
+            var reports = response.data.features;
+            var reportContainer = $('#report-container');  // Get the container using jQuery
+
+            // Iterate through each report and append its data in the jumbotron
+            $.each(reports, function (index, report) {
+                var reportData = report.attributes;
+                var objectId = report.attributes.OBJECTID;
+
+                var reportHtml = `
+                        <div class="report-item">
+                            <h5>Inspection Date: ${formatTimestamp(reportData.insp_date)}</h5>
+                            <p>Operator: ${reportData.operator}</p>
+                            <p>Purchaser: ${reportData.purchaser}</p>
+                            <p>Remarks: ${reportData.remarks}</p>
+                        </div>
+                        <p id="result${objectId}"></p>
+                        <hr>`;
+
+                reportContainer.append(reportHtml);  // Append the report data in the container
+
+
+                console.log(objectId)
+                // Fetch and display image attachments for each object
+                $.ajax({
+                    url: "https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/11/" + objectId + "/attachments?f=json",
+                    success: function (attachmentData) {
+                        if (attachmentData && attachmentData.attachmentInfos && attachmentData.attachmentInfos.length > 0) {
+                            for (var i = 0; i < attachmentData.attachmentInfos.length; i++) {
+                                var attachmentUrl = "https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/11/" + objectId + "/attachments/" + attachmentData.attachmentInfos[i].id;
+                                var attachmentName = attachmentData.attachmentInfos[i].name;
+                                var extension = attachmentName.split('.').pop().toLowerCase();
+                                var fileName = attachmentName.slice(0, -extension.length - 1); // get the filename without extension
+
+                                if (extension == "jpg" || extension == "jpeg" || extension == "png" || extension == "gif") {
+                                    // It's an image
+                                    $(`#result${objectId}`).append("<a href='" + attachmentUrl + "' title='" + fileName + "' class='mfp-image'><img src='" + attachmentUrl + "' alt='Image' style='width:100px; height:100px;'></a>");
+                                } else if (extension == "pdf") {
+                                    // It's a PDF
+                                    $(`#result${objectId}`).append("<a href='" + attachmentUrl + "' title='" + fileName + "' target='_blank'><img src='https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg' alt='PDF' style='width:100px; height:100px;'></a>");
+                                }
+                            }
+                            $('.mfp-image').magnificPopup({
+                                type: 'image'
+                            });
+                        }
+                    },
+                });
+
+            });
+        }).catch(function (error) {
+            console.error("Error fetching reports: ", error);  // Log any errors for debugging
+        });
+    });
+</script>
+
+</html>
