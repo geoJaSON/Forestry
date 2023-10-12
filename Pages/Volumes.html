@@ -300,11 +300,18 @@
                     },
                     body: formData.toString()
                 }).then(function (response) {
-                    console.log(response.data);
-                    document.getElementById('subPageFrame').contentWindow.location.reload();
+                        const success = response.data.updateResults[0];
+                        const submitButton = document.getElementById('submitButton');  // Selecting the button
 
-                }).catch(function (error) {
-                    console.error(error);
+                        if (success) {
+                            submitButton.value = 'SUCCESS!';
+                        } else {
+                            submitButton.value = 'FAILED!';
+                        }
+
+                        setTimeout(() => {
+                            submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                        }, 3000);
                 });
 
 

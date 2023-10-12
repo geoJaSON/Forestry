@@ -242,15 +242,18 @@
                 },
                 body: formData.toString()
             }).then(function (response) {
-                let data = response.data;
-                if (data.updateResults && data.updateResults[0].success) {
-                    showMessage('Data successfully posted');
-                } else {
-                    showMessage('Failed to post data');
-                }
-            }).catch((error) => {
-                console.error('Error:', error);
-                showMessage('Error: ' + error);
+                        const success = response.data.updateResults[0];
+                        const submitButton = document.getElementById('submitButton');  // Selecting the button
+
+                        if (success) {
+                            submitButton.value = 'SUCCESS!';
+                        } else {
+                            submitButton.value = 'FAILED!';
+                        }
+
+                        setTimeout(() => {
+                            submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                        }, 3000);
             });
         }
     });

@@ -1,42 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 
 <head>
-    <meta charset="utf-8">
-    <title>Task List with Checkboxes</title>
+    <title>REMIS Tasks</title>
+    <meta charset='utf-8'>
+
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/stock.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/modules/gantt.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/parallel-coordinates.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/annotations-advanced.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/draggable-points.js"></script>
+    <script src="https://code.highcharts.com/modules/static-scale.js"></script>
+    <script src="https://code.highcharts.com/modules/broken-axis.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/tilemap.js"></script>
+    <script src="https://code.highcharts.com/modules/timeline.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/treegraph.js"></script>
+    <script src="https://code.highcharts.com/modules/item-series.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+    <script src="https://code.highcharts.com/modules/bullet.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel3d.js"></script>
+    <script src="https://code.highcharts.com/modules/pyramid3d.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/pareto.js"></script>
+    <script src="https://code.highcharts.com/modules/pattern-fill.js"></script>
+    <script src="https://code.highcharts.com/modules/price-indicator.js"></script>
+    <script src="https://code.highcharts.com/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com/modules/arc-diagram.js"></script>
+    <script src="https://code.highcharts.com/modules/dependency-wheel.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://code.highcharts.com/modules/sonification.js"></script>
+    <script src="https://code.highcharts.com/modules/stock-tools.js"></script>
+    <script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/sunburst.js"></script>
+    <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
+    <script src="https://code.highcharts.com/modules/variwide.js"></script>
+    <script src="https://code.highcharts.com/modules/vector.js"></script>
+    <script src="https://code.highcharts.com/modules/venn.js"></script>
+    <script src="https://code.highcharts.com/modules/windbarb.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+    <script src="https://code.highcharts.com/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+    <script src="https://code.highcharts.com/modules/drag-panes.js"></script>
+    <script src="https://code.highcharts.com/modules/debugger.js"></script>
+    <script src="https://code.highcharts.com/modules/dumbbell.js"></script>
+    <script src="https://code.highcharts.com/modules/lollipop.js"></script>
+    <script src="https://code.highcharts.com/modules/cylinder.js"></script>
+    <script src="https://code.highcharts.com/modules/organization.js"></script>
+    <script src="https://code.highcharts.com/modules/dotplot.js"></script>
+    <script src="https://code.highcharts.com/modules/marker-clusters.js"></script>
+    <script src="https://code.highcharts.com/modules/hollowcandlestick.js"></script>
+    <script src="https://code.highcharts.com/modules/heikinashi.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://js.arcgis.com/4.21/"></script>
     <style>
+        html,
         body {
-            padding: 20px;
-            background-color: #00000000;
             font-family: Arial, sans-serif;
-        }
-
-        #listContainer {
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #listContainer .taskType {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        #listContainer .taskItem {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-
-        #listContainer .taskItem .taskDetails {
-            flex-grow: 1;
-        }
-
-        .checkbox-container {
-            padding: 5px;
+            font-size: 12px;
+            background-color: #00000000;
+            color: rgb(0, 0, 0);
         }
 
         .jumbotron {
@@ -57,67 +99,60 @@
         .jumbotron p {
             color: #ffffff;
         }
-        .btn  {
-            display: flex;
-            justify-content: center;
-
-        }
-        .btn {
-            background-color: #00904fb1;
-            border: 1px solid white;
-            /* Adjust border size as per requirement */
-            border-radius: 50px;
-            /* Adjust radius as per requirement */
-            width: 20%;
-            font-size: 15px;
-            color: white !important;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            /* Adds space between items */
-            cursor: pointer;
-            transition: all 0.2s ease-out;
-        }
-
-       
-        .btn:hover {
-            background-color: #00904fb1;
-            transform: scale(1.1);
-            /* Image will zoom in slightly when hovered over */
-            border: 2px solid #fff;
-            /* Add a border on hover */
-        }
-        #tasks-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    gap: 10px; /* Space between cards */
-}
-
-.card {
-    flex: 0 0 calc(50% - 10px); /* each card will take up 50% of the container width, minus 10px for the gap */
-    box-sizing: border-box;
-}
-
-@media (max-width: 767px) {
-    .card {
-        flex: 0 0 100%; /* On small screens, revert to vertical stacking */
-    }
-}
     </style>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css">
-    <script src="https://js.arcgis.com/4.21/"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="jumbotron text-center mt-8">
-                    <div id="tasks-container" class="container">
-                        <!-- Tasks will be appended here through JavaScript -->
-                      </div>
+            <div class="col-md-12">
+                <div class="jumbotron text-center mt-4">
+                    <form id="dataForm">
+                        <fieldset>
+                            <legend>Contract Details</legend>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" id="ContractSignDate" name="ContractSignDate"
+                                                        class="form-control">
+                                                    <label for="ContractSignDate" class="label-floating">REMIS Recieved
+                                                        by Org</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" id="ContractSignDate" name="ContractSignDate"
+                                                        class="form-control">
+                                                    <label for="ContractSignDate" class="label-floating">REMIS Project
+                                                        Install Code</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" id="REMISDisposalAuthorityID"
+                                                        name="REMISDisposalAuthorityID" class="form-control">
+                                                    <label for="REMISDisposalAuthorityID" class="label-floating">REMIS
+                                                        Disposal Authority ID</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" id="ContractSignDate" name="ContractSignDate"
+                                                        class="form-control">
+                                                    <label for="ContractSignDate" class="label-floating">REMIS
+                                                        OWI</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <div id="container"></div>
                 </div>
             </div>
         </div>
@@ -126,6 +161,12 @@
 <script>
     var urlParams = new URLSearchParams(window.location.search);
     var pgid = urlParams.get('gid');
+
+    function formatTimestamp(timestamp) {
+        const options = { day: '2-digit', month: 'short', year: '2-digit' };
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('en-US', options).toUpperCase();
+    }
 
     require([
         "esri/identity/IdentityManager",
@@ -144,50 +185,275 @@
         });
     });
 
-    const taskAliases = {
-    SaleOpeningDate: 'RD22 Primary',
-    LoggingStartDate: 'RD22 Appraisal',
-    LoggingEndDate: 'RD112',
-    InvitationDate: 'RD4',
-    IntentToAwardDate: 'RD82',
-    FileDestroyDate: 'RD6'
-    // Add other tasks as needed
-};
-function formatTimestamp(timestamp) {
-    const options = { day: '2-digit', month: 'short', year: '2-digit' };
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', options).toUpperCase();
-}
-
     function renderTasks(attributes) {
-    const container = document.getElementById('tasks-container');
-    const tasks = ["FileDestroyDate", "IntentToAwardDate", "InvitationDate", "LoggingEndDate", "LoggingStartDate", "SaleOpeningDate"];
 
-    tasks.forEach(task => {
-        const taskStatus = attributes[task]; // Assuming your API response contains a Boolean or Date to signify completion
-        console.log(taskStatus);
-        let displayName = taskAliases[task] || task; // Use the alias if available, otherwise use the task name
+        Highcharts.chart('container', {
+            series: [{
+                type: 'organization',
+                name: 'REMIS',
+                keys: ['from', 'to'],
+                data: [
+                    ['RD22_Parent', 'RD_112'],
+                    ['RD22_Parent', 'RD_121'],
+                    ['RD22_Appraisal', 'RD_4'],
+                    ['RD22_Disposal', 'Task 4'],
+                    ['RD_112', 'RD_115'],
+                    ['Task 4', 'Task 7']
+                ],
+                linkColor: 'white',
+                linkLineWidth: 2,
+                nodeWidth: 150,
+                nodes: [{
+                    id: 'RD22_Parent',
+                    title: attributes['rd22ParentDate'] == null
+                        ? 'Create RD22 Parent'
+                        : (attributes['REMISParentTaskNo'] == null
+                            ? `Created RD22 Parent<br>${formatTimestamp(attributes['rd22ParentDate'])}<br>Awaiting Sync`
+                            : 'RD22 Parent Created<br>' + formatTimestamp(attributes[rd22ParentDate])),
 
-        let taskElement = `
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">${displayName}</h5>
-                <p class="card-text">${taskStatus ? `Completed on ${formatTimestamp(taskStatus)}` : 'Not completed'}</p>
-                ${!taskStatus ? '<button onclick="completeTask(\'' + task + '\')" class="btn btn-primary">Mark as Done</button>' : ''}
-            </div>
-        </div>`;
-
-        container.insertAdjacentHTML('beforeend', taskElement);
-    });
-}
-
-
-function completeTask(taskName) {
-  // Complete to push date to GIS
-}
-
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('RD22 Parent clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: attributes['rd22ParentDate'] == null ? '#00000000' : '#00904fb1',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD22_Appraisal',
+                    title: '<b>Create Apraisal RD 22</b>',
+                    description: 'Create RD22 Appraisal',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 2 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD22_Disposal',
+                    title: 'Create Disposal RD22',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 3 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'Task 4',
+                    title: 'Task 4',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 4 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'Task 5',
+                    title: 'Task 5',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 5 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'Task 3',
+                    title: 'Task 3',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 5 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD_4',
+                    title: 'Task 5',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 5 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD_112',
+                    title: 'Create RD 112',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 6 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD_121',
+                    title: 'Create RD121',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 6 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'Task 7',
+                    title: 'Task 7',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 7 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }, {
+                    id: 'RD_115',
+                    title: 'Create RD 115',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 7 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
+                }]
+            }],
+            chart: {
+                backgroundColor: 'rgba(0, 0, 0, 0)' // Set the background color to clear
+            },
+            exporting: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: ''
+            }
+        });
+    }
 </script>
-
-
 
 </html>

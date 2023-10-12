@@ -230,6 +230,7 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <!-- TODO add download button -->
                         <div class="submit-btn">
                             <input type="submit" value="Submit">
                         </div>
@@ -466,9 +467,18 @@
                 },
                 body: formData.toString()
             }).then(function (response) {
-                console.log(response.data);
-            }).catch(function (error) {
-                console.error(error);
+                        const success = response.data.updateResults[0];
+                        const submitButton = document.getElementById('submitButton');  // Selecting the button
+
+                        if (success) {
+                            submitButton.value = 'SUCCESS!';
+                        } else {
+                            submitButton.value = 'FAILED!';
+                        }
+
+                        setTimeout(() => {
+                            submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                        }, 3000);
             });
         });
     });

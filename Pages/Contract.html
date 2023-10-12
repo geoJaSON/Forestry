@@ -79,6 +79,14 @@
             color: #ffffff;
         }
 
+        .white-label label {
+            color: white;
+        }
+
+        .white-label {
+            color: white;
+        }
+
         .submit-btn input {
             background-color: #00904fb1;
             border: 1px solid white;
@@ -108,6 +116,12 @@
         }
     </style>
 </head>
+<!-- TODO Add perform-bond-type
+branding-hammer
+road-rock-cy-rqd
+file-destray-date
+bid opening date
+bid type -->
 
 <body>
     <div class="container">
@@ -176,6 +190,30 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
+                                                <label class="white-label">Unit of Measurement</label>
+                                                <div class="white-label">
+                                                    <input type="radio" id="Cords" name="UnitOfMeasurement"
+                                                        value="Cords">
+                                                    <label for="Cords">Cords</label>
+
+                                                    <input type="radio" id="MBF" name="UnitOfMeasurement" value="MBF">
+                                                    <label for="MBF">MBF</label>
+
+                                                    <input type="radio" id="Tons" name="UnitOfMeasurement" value="Tons">
+                                                    <label for="Tons">Tons</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number" class="form-control" id="ContractAcres"
+                                                        name="ContractAcres">
+                                                    <label for="ContractAcres">Contract Acres</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="date" class="form-control" id="LoggingStartDate"
                                                         name="LoggingStartDate" placeholder="Logging Start Date">
@@ -187,6 +225,113 @@
                                                     <input type="date" class="form-control" id="LoggingEndDate"
                                                         name="LoggingEndDate" placeholder="Logging End Date">
                                                     <label for="LoggingEndDate">Logging End Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <!-- First column for Contract Type -->
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" name="BrandingHammer" id="BrandingHammer">
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                    </select>
+                                                    <label for="BrandingHammer">Branding Hammer</label>
+                                                </div>
+                                            </div>
+                                            <!-- Second column for Contract Status -->
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number" class="form-control" name="RoadRockCYRequired" id="RoadRockCYRequired">
+                                                    <label for="RoadRockCYRequired">Road Rock CY Required</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Contract Type and Status</legend>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <!-- First column for Contract Type -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" name="ContractType" id="ContractType">
+                                                <option value="Timber">Timber</option>
+                                                <option value="Salvage">Salvage</option>
+                                                <option value="Firewood (Contract)">Firewood (Contract)</option>
+                                                <option value="Construction-Related">Construction-Related</option>
+                                                <option value="Training & Range Improvement">Training & Range
+                                                    Improvement</option>
+                                                <option value="Ecological/Restoration">Ecological/Restoration</option>
+                                                <option value="Wildlife/Habitat Improvement">Wildlife/Habitat
+                                                    Improvement</option>
+                                                <option value="Firewood (Permit)">Firewood (Permit)</option>
+                                                <option value="Obstruction Removal">Obstruction Removal</option>
+                                                <option value="WA National Guard">WA National Guard</option>
+                                                <option value="Right of Way Harvest">Right of Way Harvest</option>
+                                                <option value="Recreation Enhancement">Recreation Enhancement</option>
+                                            </select>
+                                            <label for="ContractType">Contract Type</label>
+                                        </div>
+                                    </div>
+                                    <!-- Second column for Contract Status -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" name="SalesContractStatus"
+                                                id="SalesContractStatus">
+                                                <option value="Active-Logging">Active-Logging</option>
+                                                <option value="Active-On Hold">Active-On Hold</option>
+                                                <option value="Closed">Closed</option>
+                                                <option value="Finalizing">Finalizing</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Planning">Planning</option>
+                                                <option value="Rescinded">Rescinded</option>
+                                                <option value="Z-Other">Z-Other</option>
+                                            </select>
+                                            <label for="SalesContractStatus">Contract Status</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- First column for Contract Type -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" name="BidType" id="BidType">
+                                                <option value="Scaled">Scaled</option>
+                                                <option value="Lump Sum">Lump Sum</option>
+                                            </select>
+                                            <label for="BidType">Bid Type</label>
+                                        </div>
+                                    </div>
+                                    <!-- Second column for Contract Status -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="date" class="form-control" name="bidOpeningDate" id="bidOpeningDate">
+                                            <label for="bidOpeningDate">Bid Opening Date</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Second row for Declared/Supplemental -->
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6 text-center">
+                                        <div class="form-floating mb-3">
+                                            <div class="white-label">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="Declared_Supplemental" id="Declared">
+                                                    <label class="form-check-label" for="Declared">
+                                                        Declared
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="Declared_Supplemental" id="Supplemental" checked>
+                                                    <label class="form-check-label" for="Supplemental">
+                                                        Supplemental
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
@@ -258,73 +403,7 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <fieldset>
-                            <legend>Contract Type and Status</legend>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <!-- First column for Contract Type -->
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" name="ContractType" id="ContractType">
-                                                <option value="Timber">Timber</option>
-                                                <option value="Salvage">Salvage</option>
-                                                <option value="Firewood (Contract)">Firewood (Contract)</option>
-                                                <option value="Construction-Related">Construction-Related</option>
-                                                <option value="Training & Range Improvement">Training & Range
-                                                    Improvement</option>
-                                                <option value="Ecological/Restoration">Ecological/Restoration</option>
-                                                <option value="Wildlife/Habitat Improvement">Wildlife/Habitat
-                                                    Improvement</option>
-                                                <option value="Firewood (Permit)">Firewood (Permit)</option>
-                                                <option value="Obstruction Removal">Obstruction Removal</option>
-                                                <option value="WA National Guard">WA National Guard</option>
-                                                <option value="Right of Way Harvest">Right of Way Harvest</option>
-                                                <option value="Recreation Enhancement">Recreation Enhancement</option>
-                                            </select>
-                                            <label for="ContractType">Contract Type</label>
-                                        </div>
-                                    </div>
-                                    <!-- Second column for Contract Status -->
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" name="SalesContractStatus"
-                                                id="SalesContractStatus">
-                                                <option value="Active-Logging">Active-Logging</option>
-                                                <option value="Active-On Hold">Active-On Hold</option>
-                                                <option value="Closed">Closed</option>
-                                                <option value="Finalizing">Finalizing</option>
-                                                <option value="Pending">Pending</option>
-                                                <option value="Planning">Planning</option>
-                                                <option value="Rescinded">Rescinded</option>
-                                                <option value="Z-Other">Z-Other</option>
-                                            </select>
-                                            <label for="SalesContractStatus">Contract Status</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Second row for Declared/Supplemental -->
-                                <div class="row justify-content-center">
-                                    <div class="col-md-6 text-center">
-                                        <div class="form-floating mb-3">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio"
-                                                    name="Declared_Supplemental" id="Declared">
-                                                <label class="form-check-label" for="Declared">
-                                                    Declared
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio"
-                                                    name="Declared_Supplemental" id="Supplemental" checked>
-                                                <label class="form-check-label" for="Supplemental">
-                                                    Supplemental
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+                        
 
 
                         <fieldset>
@@ -356,7 +435,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="PurchaserPOC"
                                                         name="PurchaserPOC"">
-                                                    <label for="PurchaserPOC">Purchaser POC</label>
+                                                    <label for=" PurchaserPOC">Purchaser POC</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -365,14 +444,14 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="PurchaserPOCPhone"
                                                         name="PurchaserPOCPhone"">
-                                                    <label for="PurchaserPOCPhone">Purchaser POC Phone</label>
+                                                    <label for=" PurchaserPOCPhone">Purchaser POC Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="PurchaserPOCEmail"
                                                         name="PurchaserPOCEmail"">
-                                                    <label for="PurchaserPOCEmail">Purchaser POC Email</label>
+                                                    <label for=" PurchaserPOCEmail">Purchaser POC Email</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,35 +462,10 @@
                                                         <!-- Options will be filled by JavaScript -->
                                                     </select>
                                                     <label for="logger">Logger</label>
-
-
-
-
-
-
-
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6"><label>Unit of Measurement</label>
-                                                <div>
-                                                    <input type="radio" id="Cords" name="UnitOfMeasurement"
-                                                        value="Cords">
-                                                    <label for="Cords">Cords</label>
 
-                                                    <input type="radio" id="MBF" name="UnitOfMeasurement" value="MBF">
-                                                    <label for="MBF">MBF</label>
-
-                                                    <input type="radio" id="Tons" name="UnitOfMeasurement" value="Tons">
-                                                    <label for="Tons">Tons</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"><input type="number" class="form-control"
-                                                    id="ContractAcres" name="ContractAcres"
-                                                    placeholder="Contract Acres">
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
