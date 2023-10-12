@@ -359,7 +359,7 @@
         esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
             responseType: "json",
             query: {
-                where: "1=1",
+                where: "active='True'",
                 outFields: "ContactBusinessName, ContactStreet1, ContactPhone, ContactEMail1,ContactCity,ContactZip,ContactFirstName, ContactLastName",
                 f: "json"
             }

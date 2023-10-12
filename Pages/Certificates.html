@@ -167,6 +167,7 @@
                     <br>
                     <div class="row">
                         <br>
+                        <button id="download-csv">Download CSV</button>
                         <div id="certtable"></div>
                         <br>
                     </div>
@@ -340,6 +341,7 @@
 </body>
 
 <script>
+    let table
     var urlParams = new URLSearchParams(window.location.search);
     var pgid = urlParams.get('gid');
     require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
@@ -358,7 +360,7 @@
             });
 
             // Define table
-            var table = new Tabulator("#certtable", {
+            table = new Tabulator("#certtable", {
                 data: tableData, //assign data to table
                 columns: [
                     { title: "CertificateContractNo", field: "CertificateContractNo", headerFilter: "input", visible: false },
@@ -537,6 +539,9 @@
 
 
         });
+        document.getElementById("download-csv").addEventListener("click", function(){
+    table.download("csv", "Signers.csv");
+});
 </script>
 
 </html>

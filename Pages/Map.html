@@ -30,7 +30,7 @@
 
         .container-fluid {
             height: 100%;
-            width: 100%;    
+            width: 100%;
         }
 
         .jumbotron {
@@ -57,7 +57,7 @@
                     <div id="viewDiv">
                     </div>
                 </div>
-            
+
             </div>
         </div>
     </div>
@@ -70,7 +70,11 @@
         "esri/views/MapView",
         "esri/identity/IdentityManager",
         "esri/request",
-    ], (esriConfig, Map, WebMap, MapView, IdentityManager, esriRequest) => {
+        "esri/widgets/Print",
+        "esri/widgets/Expand",
+        "esri/widgets/Bookmarks",
+        "esri/widgets/BasemapGallery"
+    ], (esriConfig, Map, WebMap, MapView, IdentityManager, esriRequest, Print, Expand, Bookmarks, BasemapGallery) => {
         esriConfig.portalUrl = "https://arcportal-ucop-corps.usace.army.mil/s0portal";
         esriConfig.request.trustedServers.push("https://arcportal-ucop-corps.usace.army.mil/s0portal");
 
@@ -85,7 +89,62 @@
             container: "viewDiv",
             map: webmap,
         });
+
+        const print = new Print({
+            view: view,
+            // specify your own print service
+            printServiceUrl:
+                "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+        });
+
+        printExpand = new Expand({
+            expandIconClass: "esri-icon-printer",
+            expandTooltip: "Expand Print",
+            view: view,
+            content: print
+
+        }); const basemapGallery = new BasemapGallery({
+            view: view
+        });
+
+        const bookmarks = new Bookmarks({
+            view: view,
+            editingEnabled: true,
+            // whenever a new bookmark is created, a 100x100 px
+            // screenshot of the view will be taken and the rotation, scale, and extent
+            // of the view will not be set as the viewpoint of the new bookmark
+            defaultCreateOptions: {
+                takeScreenshot: true,
+                captureViewpoint: false,
+                captureTimeExtent: false, // the time extent of the view will not be saved in the bookmark
+                screenshotSettings: {
+                    width: 100,
+                    height: 100
+                }
+            }
+        });
+
+        bookmarkExpand = new Expand({
+            expandIconClass: "esri-icon-bookmark",
+            expandTooltip: "Expand Bookmarks",
+            view: view,
+            content: bookmarks
+        });
+
+        basemapGalleryExpand = new Expand({
+            expandIconClass: "esri-icon-basemap",
+            expandTooltip: "Expand Basemap Gallery",
+            view: view,
+            content: basemapGallery
+        });
+
+        // Add the widget to the top-right corner of the view
+        view.ui.add(basemapGalleryExpand, "top-right");
+        view.ui.add(bookmarkExpand, "top-right");
+        view.ui.add(printExpand, "top-right");
     })
+
+
 
 </script>
 

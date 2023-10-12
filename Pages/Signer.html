@@ -168,14 +168,16 @@
                 </form>
             </div>
             <div class="col-md-9">
+                <button id="download-csv">Download CSV</button>
+
                 <div id="signertable"></div>
             </div>
         </div>
     </div>
 </body>
 <script>
-
-require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esri/Map", "esri/views/MapView"],
+let table
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esri/Map", "esri/views/MapView"],
         function (IdentityManager, esriRequest) {
             // Fetch the data when the document is ready
             esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/6/query", {
@@ -193,19 +195,19 @@ require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esr
                 });
 
                 // Define table
-                var table = new Tabulator("#signertable", {
+                table = new Tabulator("#signertable", {
                     data: tableData, //assign data to table
                     height: "700px",
                     columns: [
-                        { title: "First Name", field: "SignerFirstName", editor: "input"},
+                        { title: "First Name", field: "SignerFirstName", editor: "input" },
                         { title: "Middle Initial", field: "SignerMiddleInitial", editor: "input" },
                         { title: "Last Name", field: "SignerLastName", editor: "input" },
                         { title: "Title", field: "SignerTitle", editor: "input" },
                         { title: "Short Title", field: "SignerShortTitle", editor: "input" },
-                        { title: "CEFMS ID", field: "SignerCEFMSID", editor: "input"},
-                        { title: "IS TSS?", field: "isTSS", editor: "input"},
-                        { title: "RECO", field: "SignerRECO", editor: "input"},
-                        { title: "Active?", field: "Active_InactiveSigner ", editor: "input"},
+                        { title: "CEFMS ID", field: "SignerCEFMSID", editor: "input" },
+                        {title: "IS TSS?", field: "isTSS", formatter:"tickCross", editor: "tickCross"},
+                        { title: "RECO?", field: "SignerRECO", formatter:"tickCross", editor: "tickCross"},
+                        {title: "Active?", field: "Active_InactiveSigner", formatter:"tickCross", editor: "tickCross"},
                         { title: "ObjectID", field: "OBJECTID", visible: false }
 
                     ]
@@ -222,11 +224,11 @@ require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esr
         });
     // Get the input fields
     function handleEdit(field, value, objectId) {
-            console.log("Updated: ", field, value, objectId);
-
-    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esri/Map", "esri/views/MapView"],
-        function (IdentityManager, esriRequest) {
-            // Fetch the data when the document is ready
+        console.log("Updated: ", field, value, objectId);
+    }
+        require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esri/Map", "esri/views/MapView"],
+            function (IdentityManager, esriRequest) {
+                // Fetch the data when the document is ready
 
                 document.getElementById('dataForm').addEventListener('submit', function (event) {
                     // Prevent the default form submit action
@@ -238,7 +240,7 @@ require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esr
                     const SignerTitle = document.getElementById('SignerTitle').value;
                     const SignerShortTitle = document.getElementById('SignerShortTitle').value;
                     const SignerCEFMSID = document.getElementById('SignerCEFMSID').value;
-                    const isTSS = document.getElementById('isTSS').checked ? 'Yes' : 'No';
+                    const isTSS = document.getElementById('isTSS').checked ? 'True' : 'False';
                     const SignerRECO = document.getElementById('SignerRECO').checked ? 'Real Estate Contracting Officer' : '';
 
                     // Create features array
@@ -277,8 +279,12 @@ require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!", "esr
                     });
                 });
             });
-        }
-  
+
+    
+    
+    document.getElementById("download-csv").addEventListener("click", function(){
+    table.download("csv", "Signers.csv");
+});
 </script>
 
 </html>
