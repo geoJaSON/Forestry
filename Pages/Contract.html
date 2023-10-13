@@ -158,6 +158,61 @@ bid type -->
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-floating mb-3">
+                                                    <textarea class="form-control" id="GeneralSaleDescription"
+                                                        name="GeneralSaleDescription" required></textarea>
+                                                    <label for="GeneralSaleDescription">General Sale Description</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <!-- First column for Contract Type -->
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" name="ContractType" id="ContractType">
+                                                        <option value="Timber">Timber</option>
+                                                        <option value="Salvage">Salvage</option>
+                                                        <option value="Firewood (Contract)">Firewood (Contract)</option>
+                                                        <option value="Construction-Related">Construction-Related
+                                                        </option>
+                                                        <option value="Training & Range Improvement">Training & Range
+                                                            Improvement</option>
+                                                        <option value="Ecological/Restoration">Ecological/Restoration
+                                                        </option>
+                                                        <option value="Wildlife/Habitat Improvement">Wildlife/Habitat
+                                                            Improvement</option>
+                                                        <option value="Firewood (Permit)">Firewood (Permit)</option>
+                                                        <option value="Obstruction Removal">Obstruction Removal</option>
+                                                        <option value="WA National Guard">WA National Guard</option>
+                                                        <option value="Right of Way Harvest">Right of Way Harvest
+                                                        </option>
+                                                        <option value="Recreation Enhancement">Recreation Enhancement
+                                                        </option>
+                                                    </select>
+                                                    <label for="ContractType">Contract Type</label>
+                                                </div>
+                                            </div>
+                                            <!-- Second column for Contract Status -->
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" name="SalesContractStatus"
+                                                        id="SalesContractStatus">
+                                                        <option value="Active-Logging">Active-Logging</option>
+                                                        <option value="Active-On Hold">Active-On Hold</option>
+                                                        <option value="Closed">Closed</option>
+                                                        <option value="Finalizing">Finalizing</option>
+                                                        <option value="Pending">Pending</option>
+                                                        <option value="Planning">Planning</option>
+                                                        <option value="Rescinded">Rescinded</option>
+                                                        <option value="Z-Other">Z-Other</option>
+                                                    </select>
+                                                    <label for="SalesContractStatus">Contract Status</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <select class="form-select" name="militaryorcivilcode"
@@ -189,61 +244,101 @@ bid type -->
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <label class="white-label">Unit of Measurement</label>
-                                                <div class="white-label">
-                                                    <input type="radio" id="Cords" name="UnitOfMeasurement"
-                                                        value="Cords">
-                                                    <label for="Cords">Cords</label>
-
-                                                    <input type="radio" id="MBF" name="UnitOfMeasurement" value="MBF">
-                                                    <label for="MBF">MBF</label>
-
-                                                    <input type="radio" id="Tons" name="UnitOfMeasurement" value="Tons">
-                                                    <label for="Tons">Tons</label>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" name="UnitOfMeasurement"
+                                                        id="UnitOfMeasurement">
+                                                        <option value="MBF">MBF</option>
+                                                        <option value="Cords">Cords</option>
+                                                        <option value="Tons">Tons</option>
+                                                    </select>
+                                                    <label for="UnitOfMeasurement">Unit of Measurement</label>
                                                 </div>
+                                                
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control" id="ContractAcres"
                                                         name="ContractAcres">
                                                     <label for="ContractAcres">Contract Acres</label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" class="form-control" id="LoggingStartDate"
-                                                        name="LoggingStartDate">
-                                                    <label for="LoggingStartDate">Logging Start Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" class="form-control" id="LoggingEndDate"
-                                                        name="LoggingEndDate">
-                                                    <label for="LoggingEndDate">Logging End Date</label>
+                                                    <input type="number" class="form-control" name="RoadRockCYRequired"
+                                                        id="RoadRockCYRequired">
+                                                    <label for="RoadRockCYRequired">Road Rock CY Required</label>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <!-- First column for Contract Type -->
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-select" name="BrandingHammer" id="BrandingHammer">
+                                                    <select class="form-select" name="BrandingHammer"
+                                                        id="BrandingHammer">
                                                         <option value="A">A</option>
                                                         <option value="B">B</option>
                                                     </select>
                                                     <label for="BrandingHammer">Branding Hammer</label>
                                                 </div>
                                             </div>
-                                            <!-- Second column for Contract Status -->
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" class="form-control" name="RoadRockCYRequired" id="RoadRockCYRequired">
-                                                    <label for="RoadRockCYRequired">Road Rock CY Required</label>
+                                                    <select class="form-select" name="BidType" id="BidType">
+                                                        <option value="Scaled">Scaled</option>
+                                                        <option value="Lump Sum">Lump Sum</option>
+                                                    </select>
+                                                    <label for="BidType">Bid Type</label>
+                                                </div>
+                                            </div>
+                                            <!-- Second column for Contract Status -->
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" id="TimberSalesSpecialist"
+                                                        name="TimberSalesSpecialist">
+                                                        <!-- Options will be filled by JavaScript -->
+                                                    </select>
+                                                    <label for="TimberSalesSpecialist">Timber Sales Specialist</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" name="Declared_Supplemental" id="Declared_Supplemental">
+                                                        <option value="Declared">Declared</option>
+                                                        <option value="Supplemental">Supplemental</option>
+                                                    </select>
+                                                    <label for="Declared_Supplemental">Declared or Supplemental</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" id="PerformanceBondType"
+                                                        name="PerformanceBondType">
+                                                        <option value="Not Received">Not Received</option>
+                                                        <option value="N/A">N/A</option>
+                                                        <option value="Cash/Check/Money Order in FR Safe">Cash/Check/Money Order in FR Safe</option>
+                                                        <option value="Assignment of Savings">Assignment of Savings</option>
+                                                        <option value="Letter of Credit">Letter of Credit</option>
+                                                        <option value="Insurance Bond">Insurance Bond</option>
+                                                        <option value="Held in 6501 Suspense Account">Held in 6501 Suspense Account</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                    <label for="PerformanceBondType">Performance Bond Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="number"  class="form-control" name="PerformanceBond" id="PerformanceBond">
+
+                                                    <label for="PerformanceBond">Performance Bond</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,95 +347,49 @@ bid type -->
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend>Contract Type and Status</legend>
+                            <legend>Contract Dates</legend>
                             <div class="container-fluid">
                                 <div class="row">
-                                    <!-- First column for Contract Type -->
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <select class="form-select" name="ContractType" id="ContractType">
-                                                <option value="Timber">Timber</option>
-                                                <option value="Salvage">Salvage</option>
-                                                <option value="Firewood (Contract)">Firewood (Contract)</option>
-                                                <option value="Construction-Related">Construction-Related</option>
-                                                <option value="Training & Range Improvement">Training & Range
-                                                    Improvement</option>
-                                                <option value="Ecological/Restoration">Ecological/Restoration</option>
-                                                <option value="Wildlife/Habitat Improvement">Wildlife/Habitat
-                                                    Improvement</option>
-                                                <option value="Firewood (Permit)">Firewood (Permit)</option>
-                                                <option value="Obstruction Removal">Obstruction Removal</option>
-                                                <option value="WA National Guard">WA National Guard</option>
-                                                <option value="Right of Way Harvest">Right of Way Harvest</option>
-                                                <option value="Recreation Enhancement">Recreation Enhancement</option>
-                                            </select>
-                                            <label for="ContractType">Contract Type</label>
+                                            <input type="date" class="form-control" id="LoggingStartDate"
+                                                name="LoggingStartDate">
+                                            <label for="LoggingStartDate">Logging Start Date</label>
                                         </div>
                                     </div>
-                                    <!-- Second column for Contract Status -->
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <select class="form-select" name="SalesContractStatus"
-                                                id="SalesContractStatus">
-                                                <option value="Active-Logging">Active-Logging</option>
-                                                <option value="Active-On Hold">Active-On Hold</option>
-                                                <option value="Closed">Closed</option>
-                                                <option value="Finalizing">Finalizing</option>
-                                                <option value="Pending">Pending</option>
-                                                <option value="Planning">Planning</option>
-                                                <option value="Rescinded">Rescinded</option>
-                                                <option value="Z-Other">Z-Other</option>
-                                            </select>
-                                            <label for="SalesContractStatus">Contract Status</label>
+                                            <input type="date" class="form-control" id="LoggingEndDate"
+                                                name="LoggingEndDate">
+                                            <label for="LoggingEndDate">Logging End Date</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <!-- First column for Contract Type -->
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" name="BidType" id="BidType">
-                                                <option value="Scaled">Scaled</option>
-                                                <option value="Lump Sum">Lump Sum</option>
-                                            </select>
-                                            <label for="BidType">Bid Type</label>
-                                        </div>
-                                    </div>
+
                                     <!-- Second column for Contract Status -->
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="bidOpeningDate" id="bidOpeningDate">
+                                            <input type="date" class="form-control" name="bidOpeningDate"
+                                                id="bidOpeningDate">
                                             <label for="bidOpeningDate">Bid Opening Date</label>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Second row for Declared/Supplemental -->
-                                <div class="row justify-content-center">
-                                    <div class="col-md-6 text-center">
+                                    <!-- Second column for Contract Status -->
+                                    <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <div class="white-label">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="Declared_Supplemental" id="Declared">
-                                                    <label class="form-check-label" for="Declared">
-                                                        Declared
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="Declared_Supplemental" id="Supplemental" checked>
-                                                    <label class="form-check-label" for="Supplemental">
-                                                        Supplemental
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            <input type="date" class="form-control" name="FileDestroyDate"
+                                                id="FileDestroyDate">
+                                            <label for="FileDestroyDate">File Destroy Date</label>
                                         </div>
                                     </div>
                                 </div>
+                               
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend>Location Details</legend>
+                            <legend>Location</legend>
 
                             <div class="container-fluid">
                                 <div class="row">
@@ -370,6 +419,20 @@ bid type -->
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="state" name="state">
+                                                    <label for="state">State</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="grid" name="grid">
+                                                    <label for="grid">Grid</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="TownshipRangeSection"
                                                         name="TownshipRangeSection">
                                                     <label for="instalTownshipRangeSectionlation">Township Range
@@ -378,98 +441,30 @@ bid type -->
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="Latitude"
                                                         name="Latitude">
                                                     <label for="Latitude">Latitude</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="Longitude"
                                                         name="Longitude">
                                                     <label for="Longitude">Longitude</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="grid" name="grid">
-                                                    <label for="grid">Grid</label>
-                                                </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
-                        
 
 
-                        <fieldset>
-                            <legend>POC Information</legend>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-floating mb-3">
-                                                    <select class="form-select" id="TimberSalesSpecialist"
-                                                        name="TimberSalesSpecialist">
-                                                        <!-- Options will be filled by JavaScript -->
-                                                    </select>
-                                                    <label for="TimberSalesSpecialist">Timber Sales Specialist</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <select class="form-select" id="purchaser" name="purchaser">
-                                                        <!-- Options will be filled by JavaScript -->
-                                                    </select>
-                                                    <label for="purchaser">Purchaser</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="PurchaserPOC"
-                                                        name="PurchaserPOC"">
-                                                    <label for=" PurchaserPOC">Purchaser POC</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="PurchaserPOCPhone"
-                                                        name="PurchaserPOCPhone"">
-                                                    <label for=" PurchaserPOCPhone">Purchaser POC Phone</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="PurchaserPOCEmail"
-                                                        name="PurchaserPOCEmail"">
-                                                    <label for=" PurchaserPOCEmail">Purchaser POC Email</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-floating mb-3">
-                                                    <select id="logger" class="form-select" name="logger">
-                                                        <!-- Options will be filled by JavaScript -->
-                                                    </select>
-                                                    <label for="logger">Logger</label>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+
                         <div class="submit-btn">
                             <input type="submit" id="submitButton" value="Submit Edits">
                         </div>
@@ -489,19 +484,12 @@ bid type -->
         "esri/request",
         "dojo/domReady!"
     ], function (IdentityManager, esriRequest) {
-        const purchaserRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
-            responseType: "json",
-            query: {
-                where: "Purchaser='True'",
-                outFields: "ContactBusinessName, ContactFirstName, ContactLastName, ContactPhone, ContactEMail1",
-                f: "json"
-            }
-        });
+
 
         const signerNamesRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/6/query", {
             responseType: "json",
             query: {
-                where: "isTss='True'",
+                where: "isTss='True' AND Active_InactiveSigner = 'True'",
                 outFields: "SignerName",
                 returnDistinctValues: true,
                 f: "json"
@@ -533,36 +521,10 @@ bid type -->
             return `${year}-${month}-${day}`;
         }
 
-        Promise.all([purchaserRequest, signerNamesRequest, dataFetchRequest])
-            .then(function ([purchaserResponse, signerNamesResponse, dataFetchResponse]) {
+        Promise.all([ signerNamesRequest, dataFetchRequest])
+            .then(function ([ signerNamesResponse, dataFetchResponse]) {
                 // Handle the purchaser response
-                const purchaserSelect = document.getElementById('purchaser');
-                const loggerSelect = document.getElementById('logger');
-
-                purchaserSelect.innerHTML = '';
-                loggerSelect.innerHTML = '';
-
-                const sortedFeatures = purchaserResponse.data.features.sort((a, b) => {
-                    if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
-                    if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
-                    return 0;
-                });
-
-                sortedFeatures.forEach(feature => {
-                    const option = document.createElement('option');
-                    option.value = feature.attributes.ContactBusinessName;
-                    option.textContent = feature.attributes.ContactBusinessName;
-                    featureMap.set(option.value, feature);
-                    purchaserSelect.appendChild(option);
-                });
-
-                sortedFeatures.forEach(feature => {
-                    const option = document.createElement('option');
-                    option.value = feature.attributes.ContactBusinessName;
-                    option.textContent = feature.attributes.ContactBusinessName;
-                    featureMap.set(option.value, feature);
-                    loggerSelect.appendChild(option);
-                });
+                
 
                 // Handle the signer names response
                 const signerNames = signerNamesResponse.data.features.map(feature => feature.attributes.SignerName);
@@ -590,45 +552,7 @@ bid type -->
                         }
                     }
                 }
-                document.getElementById('purchaser').addEventListener('change', function (e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
 
-                    if (selectedFeature) {
-                        selectedPOC = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
-                        document.getElementById('PurchaserPOC').value = selectedPOC;
-                        console.log('Selected POC:', selectedPOC);
-
-                        selectedPhone = selectedFeature.attributes.ContactPhone;
-                        document.getElementById('PurchaserPOCPhone').value = selectedPhone;
-                        console.log('Selected Phone:', selectedPhone);
-
-                        selectedEmail = selectedFeature.attributes.ContactEMail1;
-                        document.getElementById('PurchaserPOCEmail').value = selectedEmail;
-                        console.log('Selected Email:', selectedEmail);
-                    }
-                });
-                // Convert the select box into a searchable select box with Select2
-                $(purchaserSelect).select2({
-                    width: 'resolve' // need to override the changed width by Select2
-                }).on('select2:select', function (e) {
-                    // Get the feature from the map using the selected value
-                    const selectedFeature = featureMap.get(e.target.value);
-
-                    if (selectedFeature) {
-                        selectedPOC = selectedFeature.attributes.ContactFirstName + ' ' + selectedFeature.attributes.ContactLastName;
-                        document.getElementById('PurchaserPOC').value = selectedPOC;
-                        console.log('Selected POC:', selectedPOC);
-
-                        selectedPhone = selectedFeature.attributes.ContactPhone;
-                        document.getElementById('PurchaserPOCPhone').value = selectedPhone;
-                        console.log('Selected Phone:', selectedPhone);
-
-                        selectedEmail = selectedFeature.attributes.ContactEMail1;
-                        document.getElementById('PurchaserPOCEmail').value = selectedEmail;
-                        console.log('Selected Email:', selectedEmail);
-                    }
-                });
 
                 // Add an input event listener to all input fields
                 Array.from(document.querySelectorAll('input, select')).forEach((element) => {

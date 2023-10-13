@@ -99,9 +99,34 @@
         .jumbotron p {
             color: #ffffff;
         }
+
+        .submit-btn input {
+            background-color: #00904fb1;
+            border: 1px solid white;
+            /* Adjust border size as per requirement */
+            border-radius: 50px;
+            /* Adjust radius as per requirement */
+            width: 20%;
+            font-size: 15px;
+            color: white !important;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            /* Adds space between items */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .submit-btn input:hover {
+            background-color: #ffffff56;
+            transform: scale(1.1);
+            /* Image will zoom in slightly when hovered over */
+            border: 2px solid #fff;
+            /* Add a border on hover */
+        }
     </style>
 </head>
 <!-- TODO Populate fields -->
+
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -116,9 +141,9 @@
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="form-floating mb-3">
-                                                    <input type="text" id="ContractSignDate" name="ContractSignDate"
+                                                    <input type="text" id="REMISReceivedByOrg" name="REMISReceivedByOrg"
                                                         class="form-control">
-                                                    <label for="ContractSignDate" class="label-floating">REMIS Recieved
+                                                    <label for="REMISReceivedByOrg" class="label-floating">Recieved
                                                         by Org</label>
                                                 </div>
                                             </div>
@@ -126,7 +151,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" id="ContractSignDate" name="ContractSignDate"
                                                         class="form-control">
-                                                    <label for="ContractSignDate" class="label-floating">REMIS Project
+                                                    <label for="ContractSignDate" class="label-floating">Project
                                                         Install Code</label>
                                                 </div>
                                             </div>
@@ -134,7 +159,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" id="REMISDisposalAuthorityID"
                                                         name="REMISDisposalAuthorityID" class="form-control">
-                                                    <label for="REMISDisposalAuthorityID" class="label-floating">REMIS
+                                                    <label for="REMISDisposalAuthorityID" class="label-floating">
                                                         Disposal Authority ID</label>
                                                 </div>
                                             </div>
@@ -142,15 +167,56 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" id="ContractSignDate" name="ContractSignDate"
                                                         class="form-control">
-                                                    <label for="ContractSignDate" class="label-floating">REMIS
-                                                        OWI</label>
+                                                    <label for="ContractSignDate" class="label-floating"> OWI</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" id="DecOfAvailabilityDate"
+                                                        name="DecOfAvailabilityDate" class="form-control">
+                                                    <label for="DecOfAvailabilityDate"
+                                                        class="label-floating">Declaration of Availability Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" id="LastTerminationDate"
+                                                        name="LastTerminationDate" class="form-control">
+                                                    <label for="LastTerminationDate" class="label-floating">Last
+                                                        Termination Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" id="InvitationDate" name="InvitationDate"
+                                                        class="form-control">
+                                                    <label for="InvitationDate" class="label-floating">Invitation
+                                                        Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" id="project_install_code"
+                                                        name="project_install_code" class="form-control">
+                                                    <label for="project_install_code"
+                                                        class="label-floating">Project/Install Code</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="submit-btn">
+                                <input type="submit" id="submitButton" value="Submit Edits">
+                            </div>
                         </fieldset>
+
                     </form>
                     <div id="container"></div>
                 </div>
@@ -158,7 +224,21 @@
         </div>
     </div>
 </body>
+<!-- TODO Add logic to populate fields & update -->
 <script>
+    let changes
+    function formatUnixTimestamp(timestamp) {
+        // Create a new Date object
+        const date = new Date(timestamp);
+
+        // Extract the date components
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // months are 0-indexed
+        const day = date.getDate().toString().padStart(2, '0');
+
+        // Format the date string
+        return `${year}-${month}-${day}`;
+    }
     var urlParams = new URLSearchParams(window.location.search);
     var pgid = urlParams.get('gid');
 
@@ -182,8 +262,25 @@
             }
         }).then(function (response) {
             renderTasks(response.data.features[0].attributes);
+            // Handle the data fetch response
+            const attributes = response.data.features[0].attributes;
+            changes = {
+                "OBJECTID": attributes["OBJECTID"],
+            }; // Initialize an empty object to keep track of changes
+
+            for (const attribute in attributes) {
+                const formField = document.getElementById(attribute);
+                if (formField) {
+                    if (formField.type === 'date') {
+                        formField.value = formatUnixTimestamp(attributes[attribute]);
+                    } else {
+                        formField.value = attributes[attribute];
+                    }
+                }
+            }
         });
     });
+
 
     function renderTasks(attributes) {
 
@@ -454,6 +551,62 @@
             }
         });
     }
+    
+    Array.from(document.querySelectorAll('input, select')).forEach((element) => {
+                element.addEventListener('input', function (event) {
+                    // Update the changes object when a field changes
+                    changes[event.target.id] = event.target.value;
+                });
+            });
+            
+    document.getElementById('dataForm').addEventListener('submit', function (event) {
+        // Prevent the default form submit action
+        require([
+            "esri/identity/IdentityManager",
+            "esri/request",
+            "dojo/domReady!"
+        ], function (IdentityManager, esriRequest) {
+            // Add an input event listener to all input fields
+            
+            // Listen for form submit event
+
+            event.preventDefault();
+
+            // Create features array
+            const features = [{
+                "attributes": changes // Use the changes object here
+            }];
+
+            // Convert features to URL-encoded string
+            const formData = new URLSearchParams();
+            formData.append('f', 'json');
+            formData.append('updates', JSON.stringify(features));
+
+            // Send a POST request to your REST endpoint
+            esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/0/applyEdits", {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            }).then(function (response) {
+                const success = response.data.updateResults[0];
+                const submitButton = document.getElementById('submitButton');  // Selecting the button
+
+                if (success) {
+                    submitButton.value = 'SUCCESS!';
+                } else {
+                    submitButton.value = 'FAILED!';
+                }
+
+                setTimeout(() => {
+                    submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                }, 3000);
+            });
+
+        })
+    });
+
 </script>
 
 </html>

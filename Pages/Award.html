@@ -129,7 +129,6 @@
                     <form id="dataForm">
                         <fieldset>
                             <legend>Contract Details</legend>
-                            <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
@@ -152,19 +151,13 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             
                             
                             <div class="form-floating mb-3">
                                 <textarea id="SalePurpose" name="SalePurpose" class="form-control"></textarea>
                                 <label for="SalePurpose" class="label-floating">Sale Purpose</label>
                             </div>
-                            <div class="form-floating mb-3">
-                                <textarea id="GeneralSaleDescription" name="GeneralSaleDescription"
-                                    class="form-control"></textarea>
-                                <label for="GeneralSaleDescription" class="label-floating">General Sale
-                                    Description</label>
-                            </div>
+
                             <div class="form-floating mb-3">
                                 <textarea id="UniqueConditions" name="UniqueConditions" rows="3"
                                     class="form-control"></textarea>
@@ -238,9 +231,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-floating mb-3">
+                                            <select id="logger" class="form-select" name="logger">
+                                                <!-- Options will be filled by JavaScript -->
+                                            </select>
+                                            <label for="logger">Logger</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </fieldset>
-
+                        <!-- TODO Make award purchaser autofill bid info -->
                         <fieldset>
                             <legend>Bid Information</legend>
 
@@ -308,6 +311,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     const cid = urlParams.get('cid');
     const pgid = urlParams.get('gid');
+
+
+
+
+
+
+
     require([
         "esri/identity/IdentityManager",
         "esri/request",
@@ -322,6 +332,22 @@
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         const signerNamesRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/6/query", {
             responseType: "json",
             query: {
@@ -343,6 +369,15 @@
             }
         });
 
+        const loggerRequest = esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/2/query", {
+            responseType: "json",
+            query: {
+                where: "Purchaser='True'",
+                outFields: "ContactBusinessName",
+                f: "json"
+            }
+        });
+
         function formatUnixTimestamp(timestamp) {
             // Create a new Date object
             const date = new Date(timestamp);
@@ -355,8 +390,8 @@
             // Format the date string
             return `${year}-${month}-${day}`;
         }
-        Promise.all([purchaserRequest, signerNamesRequest, dataFetchRequest])
-            .then(function ([purchaserResponse, signerNamesResponse, dataFetchResponse]) {
+        Promise.all([purchaserRequest, signerNamesRequest, dataFetchRequest, loggerRequest])
+            .then(function ([purchaserResponse, signerNamesResponse, dataFetchResponse, loggerRequest]) {
                 // Handle the purchaser response
                 const purchaserSelect = document.getElementById('purchaser');
 
@@ -476,6 +511,31 @@
                         selectedZip = selectedFeature.attributes.bidderzip;
                         document.getElementById('PurchaserPOCZip').value = selectedDeposit;
                     }
+                });
+
+                const loggerSelect = document.getElementById('logger');
+
+                loggerSelect.innerHTML = '';
+
+                const sortedFeatures2 = loggerRequest.data.features.sort((a, b) => {
+                    if (a.attributes.ContactBusinessName < b.attributes.ContactBusinessName) return -1;
+                    if (a.attributes.ContactBusinessName > b.attributes.ContactBusinessName) return 1;
+                    return 0;
+                });
+
+                sortedFeatures2.forEach(feature => {
+                    const option = document.createElement('option');
+                    option.value = feature.attributes.ContactBusinessName;
+                    option.textContent = feature.attributes.ContactBusinessName;
+                    featureMap.set(option.value, feature);
+                });
+
+                sortedFeatures2.forEach(feature => {
+                    const option = document.createElement('option');
+                    option.value = feature.attributes.ContactBusinessName;
+                    option.textContent = feature.attributes.ContactBusinessName;
+                    featureMap.set(option.value, feature);
+                    loggerSelect.appendChild(option);
                 });
 
                 // Add an input event listener to all input fields
