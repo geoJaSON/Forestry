@@ -71,6 +71,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+    <script src="luxon.min.js"></script>
     <script src="https://js.arcgis.com/4.21/"></script>
     <style>
         html,
@@ -98,6 +101,17 @@
 
         .jumbotron p {
             color: #ffffff;
+        }
+
+        fieldset {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        legend {
+            color: white;
+            font-weight: bold;
         }
 
         .submit-btn input {
@@ -151,8 +165,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" id="ContractSignDate" name="ContractSignDate"
                                                         class="form-control">
-                                                    <label for="ContractSignDate" class="label-floating">Project
-                                                        Install Code</label>
+                                                    <label for="ContractSignDate" class="label-floating">Contract Sign Date</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -219,12 +232,149 @@
 
                     </form>
                     <div id="container"></div>
+                    <br>
+                    <div class="row">
+                        <br>
+                        <div id="sync-message" style="margin-bottom: 10px;">Loading...</div>
+
+                        <div id="bidtable"><br>
+                            <br>
+                        </div>
+
+                    </div>
+                    <form id="dataForm2">
+                        <br>
+                        <fieldset>
+                            <legend>Add New Payment</legend>
+                            <div class="container-fluid">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <!-- Payment No -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="paymentNo"
+                                                    name="P_PAYMENT_NO">
+                                                <label for="paymentNo">Payment No</label>
+                                            </div>
+                                        </div>
+                                        <!-- Authority -->
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="authority"
+                                                    name="P_DISP_AUTH_ID">
+                                                <label for="authority">Authority</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Description -->
+                                            <div class="form-floating mb-6">
+                                                <input type="text" class="form-control" id="description"
+                                                    name="P_DESCRIPTION">
+                                                <label for="description">Description</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <!-- Disposition Method -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="dispositionMethod"
+                                                    name="P_DISPOSAL_TYPE">
+                                                <label for="dispositionMethod">Disposition Method</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Disposition Date -->
+                                            <div class="form-floating mb-3">
+                                                <input type="date" class="form-control" id="dispositionDate"
+                                                    name="P_EXECUTION_DATE">
+                                                <label for="dispositionDate">Disposition Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Sale Price -->
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="salePrice"
+                                                    name="P_CONTRACT_AMOUNT">
+                                                <label for="salePrice">Sale Price</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Gov Cost Avoidance -->
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="govCostAvoidance"
+                                                    name="P_COSTS_AVOIDANCE">
+                                                <label for="govCostAvoidance">Gov Cost Avoidance</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <!-- Recorded Date -->
+                                            <div class="form-floating mb-3">
+                                                <input type="datetime-local" class="form-control" id="recordedDate"
+                                                    name="P_RECORDED_DATE">
+                                                <label for="recordedDate">Recorded Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Delivery Date -->
+                                            <div class="form-floating mb-3">
+                                                <input type="date" class="form-control" id="deliveryDate"
+                                                    name="P_DELIVERY_DATE">
+                                                <label for="deliveryDate">Delivery Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Disposing Org -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="disposingOrg"
+                                                    name="P_DISPOSING_ORGN">
+                                                <label for="disposingOrg">Disposing Org</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <!-- Instrument Type -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="instrumentType"
+                                                    name="P_INSTRUMENT_TYPE">
+                                                <label for="instrumentType">Instrument Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Send Payment to Org -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="sendPaymentToOrg"
+                                                    name="P_ORG_CODE">
+                                                <label for="sendPaymentToOrg">Send Payment to Org</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- Instruction Record Location -->
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="instructionRecordLocation"
+                                                    name="P_INSTRUMENT_RECORD_LOCATION">
+                                                <label for="instructionRecordLocation">Instruction Record
+                                                    Location</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="submit-btn">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </body>
-<!-- TODO Add logic to populate fields & update -->
 <script>
     let changes
     function formatUnixTimestamp(timestamp) {
@@ -248,6 +398,11 @@
         return date.toLocaleDateString('en-US', options).toUpperCase();
     }
 
+    let cid
+    let org
+    let wi
+    let code
+
     require([
         "esri/identity/IdentityManager",
         "esri/request",
@@ -267,7 +422,10 @@
             changes = {
                 "OBJECTID": attributes["OBJECTID"],
             }; // Initialize an empty object to keep track of changes
-
+            cid = attributes["ContractID"]
+            org = attributes["REMISDisposalAuthorityID"]
+            wi = attributes["REMISReceivedByOrg"]
+            code = attributes["project_install_code"]
             for (const attribute in attributes) {
                 const formField = document.getElementById(attribute);
                 if (formField) {
@@ -293,9 +451,15 @@
                     ['RD22_Parent', 'RD_112'],
                     ['RD22_Parent', 'RD_121'],
                     ['RD22_Appraisal', 'RD_4'],
-                    ['RD22_Disposal', 'Task 4'],
+                    ['RD22_Disposal', 'RD_6'],
                     ['RD_112', 'RD_115'],
-                    ['Task 4', 'Task 7']
+                    ['RD_4','Close_Appraisal'],
+                    ['RD_6', 'RD_71'],
+                    ['RD_71','Close_Disposal'],
+                    ['Close_Appraisal','Close_Disposal'],
+                    ['Close_Disposal','Close_Parent'],
+                    ['RD_115','Close_Parent']
+                    
                 ],
                 linkColor: 'white',
                 linkLineWidth: 2,
@@ -368,8 +532,8 @@
                     color: '#00000000',
                     borderColor: 'white'
                 }, {
-                    id: 'Task 4',
-                    title: 'Task 4',
+                    id: 'RD_6',
+                    title: 'Create RD6',
                     description: 'Click to trigger function',
                     events: {
                         click: function () {
@@ -389,8 +553,8 @@
                     color: '#00000000',
                     borderColor: 'white'
                 }, {
-                    id: 'Task 5',
-                    title: 'Task 5',
+                    id: 'RD_71',
+                    title: 'Create RD71',
                     description: 'Click to trigger function',
                     events: {
                         click: function () {
@@ -410,8 +574,8 @@
                     color: '#00000000',
                     borderColor: 'white'
                 }, {
-                    id: 'Task 3',
-                    title: 'Task 3',
+                    id: 'Close_Appraisal',
+                    title: 'Close RD22 Appraisal',
                     description: 'Click to trigger function',
                     events: {
                         click: function () {
@@ -432,7 +596,7 @@
                     borderColor: 'white'
                 }, {
                     id: 'RD_4',
-                    title: 'Task 5',
+                    title: 'Create RD4',
                     description: 'Click to trigger function',
                     events: {
                         click: function () {
@@ -494,8 +658,8 @@
                     color: '#00000000',
                     borderColor: 'white'
                 }, {
-                    id: 'Task 7',
-                    title: 'Task 7',
+                    id: 'Close_Disposal',
+                    title: 'Close RD22 Disposal',
                     description: 'Click to trigger function',
                     events: {
                         click: function () {
@@ -535,6 +699,27 @@
                     },
                     color: '#00000000',
                     borderColor: 'white'
+                }, {
+                    id: 'Close_Parent',
+                    title: 'Close RD22 Parent',
+                    description: 'Click to trigger function',
+                    events: {
+                        click: function () {
+                            // Function to be triggered on click
+                            console.log('Task 7 clicked');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.title}',
+                        style: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'normal',
+                            color: 'white'
+                        }
+                    },
+                    color: '#00000000',
+                    borderColor: 'white'
                 }]
             }],
             chart: {
@@ -551,14 +736,14 @@
             }
         });
     }
-    
+
     Array.from(document.querySelectorAll('input, select')).forEach((element) => {
-                element.addEventListener('input', function (event) {
-                    // Update the changes object when a field changes
-                    changes[event.target.id] = event.target.value;
-                });
-            });
-            
+        element.addEventListener('input', function (event) {
+            // Update the changes object when a field changes
+            changes[event.target.id] = event.target.value;
+        });
+    });
+
     document.getElementById('dataForm').addEventListener('submit', function (event) {
         // Prevent the default form submit action
         require([
@@ -567,7 +752,7 @@
             "dojo/domReady!"
         ], function (IdentityManager, esriRequest) {
             // Add an input event listener to all input fields
-            
+
             // Listen for form submit event
 
             event.preventDefault();
@@ -606,6 +791,133 @@
 
         })
     });
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
+        // Fetch the data when the document is ready
+        esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/15/query", {
+            responseType: "json",
+            query: {
+                where: "parentglobalid = '" + pgid + "'",
+                outFields: "*",
+                f: "json"
+            }
+        }).then(function (response) {
+
+            // Extract data
+        var tableData = response.data.features.map(function (feature) {
+            return feature.attributes;
+        });
+
+        // Initialize REMIS Sync counter
+        var remisSyncedCount = tableData.reduce(function (count, row) {
+            return count + (row.REMIS_Sync ? 1 : 0);
+        }, 0);
+
+        // Update the message
+        var messageDiv = document.getElementById('sync-message');
+        if (messageDiv) {
+            messageDiv.innerText = `${remisSyncedCount} of ${tableData.length} Payments Sync'd with REMIS`;
+        }
+
+            // Define table
+            var table = new Tabulator("#bidtable", {
+                data: tableData, //assign data to table
+                columns: [
+                    { title: "Contract No", field: "P_CONTRACT_NO", headerFilter: "input", visible: false },
+                    { title: "Payment No", field: "P_PAYMENT_NO" },
+                    { title: "Description", field: "P_DESCRIPTION" },
+                    { title: "Authority", field: "P_DISP_AUTH_ID" },
+                    { title: "Disposition Method", field: "P_DISPOSAL_TYPE" },
+                    { title: "Disposition Date", field: "P_EXECUTION_DATE" },
+                    { title: "Sale Price", field: "P_CONTRACT_AMOUNT" },
+                    { title: "GlobalID", field: "GlobalID", visible: false },
+                    { title: "Gov Cost Avoidance", field: "P_COSTS_AVOIDANCE" },
+                    { title: "Recorded Date", field: "P_RECORDED_DATE", formatter: "datetime" },
+                    { title: "Delivery Date", field: "P_DELIVERY_DATE" },
+                    { title: "Disposing Org", field: "P_DISPOSING_ORGN" },
+                    { title: "Parent GlobalID", field: "parentglobalid", visible: false },
+                    { title: "Sync'd With REMIS?", field: "REMIS_Sync", formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "Instrument Type", field: "P_INSTRUMENT_TYPE" },
+                    { title: "ObjectID", field: "ObjectID", visible: false },
+                    { title: "Send Payment to Org", field: "P_ORG_CODE" },
+                    { title: "Instruction Record Location", field: "P_INSTRUMENT_RECORD_LOCATION" }
+
+                ]
+            });
+
+        })
+    });
+
+    require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"],
+        function (IdentityManager, esriRequest) {
+
+            document.getElementById('dataForm2').addEventListener('submit', function (event) {
+                // Prevent the default form submit action
+                event.preventDefault();
+                const P_PAYMENT_NO = document.getElementById('P_PAYMENT_NO').value;
+                const P_DESCRIPTION = document.getElementById('P_DESCRIPTION').value;
+                const P_DISP_AUTH_ID = parseInt(document.getElementById('P_DISP_AUTH_ID').value);
+                const P_DISPOSAL_TYPE = parseInt(document.getElementById('P_DISPOSAL_TYPE').value);
+                const P_EXECUTION_DATE = parseInt(document.getElementById('P_EXECUTION_DATE').value);
+                const P_CONTRACT_AMOUNT = parseInt(document.getElementById('P_CONTRACT_AMOUNT').value);
+                const P_COSTS_AVOIDANCE = parseInt(document.getElementById('P_COSTS_AVOIDANCE').value);
+                const P_RECORDED_DATE = parseInt(document.getElementById('P_RECORDED_DATE').value);
+                const P_DELIVERY_DATE = parseInt(document.getElementById('P_DELIVERY_DATE').value);
+                const P_DISPOSING_ORGN = parseInt(document.getElementById('P_DISPOSING_ORGN').value);
+                const P_INSTRUMENT_TYPE = parseInt(document.getElementById('P_INSTRUMENT_TYPE').value);
+                const P_ORG_CODE = parseInt(document.getElementById('P_ORG_CODE').value);
+                const P_INSTRUMENT_RECORD_LOCATION = parseInt(document.getElementById('P_INSTRUMENT_RECORD_LOCATION').value);
+
+
+                // Create features array
+                const features = [{
+                    "attributes": {
+                        "P_CONTRACT_NO": cid,
+                        "P_PAYMENT_NO": P_PAYMENT_NO,
+                        "P_DESCRIPTION": P_DESCRIPTION,
+                        "P_DISP_AUTH_ID": P_DISP_AUTH_ID,
+                        "P_DISPOSAL_TYPE": P_DISPOSAL_TYPE,
+                        "P_EXECUTION_DATE": P_EXECUTION_DATE,
+                        "P_CONTRACT_AMOUNT": P_CONTRACT_AMOUNT,
+                        "P_COSTS_AVOIDANCE": P_COSTS_AVOIDANCE,
+                        "P_RECORDED_DATE": P_RECORDED_DATE,
+                        "P_DELIVERY_DATE": P_DELIVERY_DATE,
+                        "P_DISPOSING_ORGN": P_DISPOSING_ORGN,
+                        "P_INSTRUMENT_TYPE": P_INSTRUMENT_TYPE,
+                        "P_ORG_CODE": P_ORG_CODE,
+                        "P_INSTRUMENT_RECORD_LOCATION": P_INSTRUMENT_RECORD_LOCATION,
+                        "parentglobalid": pgid
+                    }
+                }];
+
+                // Convert features to URL-encoded string
+                console.log(features)
+
+                const formData = new URLSearchParams();
+                formData.append('f', 'json');
+                formData.append('features', JSON.stringify(features));
+                // Send a POST request to your REST endpoint
+                esriRequest("https://arcportal-ucop-corps.usace.army.mil/s0arcgis/rest/services/Forestry/FeatureServer/8/addFeatures", {
+                    method: "post",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                }).then(function (response) {
+                    const success = response.data.updateResults[0];
+                    const submitButton = document.getElementById('submitButton');  // Selecting the button
+
+                    if (success) {
+                        submitButton.value = 'SUCCESS!';
+                    } else {
+                        submitButton.value = 'FAILED!';
+                    }
+
+                    setTimeout(() => {
+                        submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                    }, 3000);
+                });
+            });
+        });
 
 </script>
 

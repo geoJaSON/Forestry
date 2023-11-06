@@ -14,6 +14,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://js.arcgis.com/4.21/"></script>
 </head>
 <style>
@@ -172,6 +173,25 @@
                         <br>
                     </div>
                     <br>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Upload PDF
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#" data-company="pacific-rim">Pacific Rim Log Scaling</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#" data-company="northwest">Northwest Log Scalers</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#" data-company="columbia">Columbia River Log Scalers</a>
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+                    <input type="file" id="pdf-input" accept="application/pdf" style="display: none;">
+                    <br>
                     <form id="dataForm">
                         <fieldset>
                             <legend>Add New Certificate</legend>
@@ -297,16 +317,14 @@
                                     <div class="form-floating mb-3">
                                         <input class="form-control" type="text" id="cleanLogUtility"
                                             name="cleanLogUtility">
-                                            <label
-                                            for="cleanLogUtility" class="label-floating">Clean Log Utility</label>
+                                        <label for="cleanLogUtility" class="label-floating">Clean Log Utility</label>
 
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
                                         <input class="form-control" type="text" id="payment" name="payment">
-                                        <label
-                                            for="payment" class="label-floating">Payment</label>
+                                        <label for="payment" class="label-floating">Payment</label>
 
                                     </div>
                                 </div>
@@ -340,10 +358,78 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataModalLabel">Parsed Ticket Records</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="data-table"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="pdfSubmitBtn" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <script>
     let table
+    var table2 = new Tabulator("#data-table", {
+        columns: [
+            { title: "Certificate No", field: "certificate_no", editor: "input" },
+            {
+                title: "Species", field: "species", editor: "select",
+                editorParams: {
+                    values: ["Alder",
+                        "Chamarecyparis",
+                        "Cottonwood",
+                        "Douglas Fir",
+                        "Grand Fir",
+                        "Pacific Madrona",
+                        "Pondarosa Pine",
+                        "Red Cedar",
+                        "White Fir",
+                        "White Oak",
+                        "Woody Biomass"]
+                }
+            },
+            { title: "Date", field: "date", editor: "input" },
+            {
+                title: "Product", field: "product", editor: "select",
+                editorParams: {
+                    values: ['None',
+                        'Firewood',
+                        'FishLogs',
+                        'HogFuel',
+                        'Lumber',
+                        'Paper',
+                        'Poles',
+                        'Pulp',
+                        'ShakeFencing',
+                        'Slash',
+                        'Rock',
+                        'Scraps',
+                        'Utility',
+                        'Veneer']
+                }
+            },
+            { title: "Book No", field: "Book_No", editor: "input" },
+            { title: "Ticket No", field: "Ticket_No", editor: "input" },
+            { title: "Sawmill", field: "Sawmill", editor: "input" },
+            { title: "Utility", field: "Utility", editor: "input" },
+        ],
+        layout: "fitColumns", // fit columns to width of table
+        responsiveLayout: "hide", // hide columns that dont fit on the table
+        tooltips: true // show tool tips on cells
+    });
+
     var urlParams = new URLSearchParams(window.location.search);
     var pgid = urlParams.get('gid');
     require(["esri/identity/IdentityManager", "esri/request", "dojo/domReady!"], function (IdentityManager, esriRequest) {
@@ -365,32 +451,30 @@
             table = new Tabulator("#certtable", {
                 data: tableData, //assign data to table
                 columns: [
-                    { title: "CertificateContractNo", field: "CertificateContractNo", headerFilter: "input", visible: false },
-                    { title: "CertificateNo", field: "CertificateNo", editor: "input" },
-                    { title: "StartingScaleDate", field: "StartingScaleDate", editor: "input", formatter: "datetime" },
-                    { title: "EndingScaleDate", field: "EndingScaleDate", editor: "input", formatter: "datetime" },
+                    { title: "Certificate No", field: "CertificateNo", editor: "input" },
+                    { title: "Scale Date", field: "StartingScaleDate", editor: "input", formatter: "datetime" },
+                    { title: "Book No", field: "LoadBookNo", editor: "input" },
+                    { title: "Ticket No", field: "LoadTicketNo", editor: "input" },
                     { title: "Loads", field: "Loads", editor: "input" },
-                    { title: "AcresCut", field: "AcresCut", editor: "input" },
+                    { title: "Acres Cut", field: "AcresCut", editor: "input" },
                     { title: "Sawlog", field: "Sawlog", editor: "input" },
                     { title: "Utility", field: "Utility", editor: "input" },
-                    { title: "CleanLogUtility", field: "CleanLogUtility", editor: "input" },
-                    { title: "Slash_Rock", field: "Slash_Rock", editor: "input" },
+                    { title: "Clean Log Utility", field: "CleanLogUtility", editor: "input" },
+                    { title: "Slash Rock", field: "Slash_Rock", editor: "input" },
                     { title: "Payment", field: "Payment", editor: "input" },
-                    { title: "OtherChargesDue", field: "OtherChargesDue", editor: "input" },
-                    { title: "OtherFeesPaid", field: "OtherFeesPaid", editor: "input" },
-                    { title: "SpeciesType", field: "SpeciesType", editor: "input" },
-                    { title: "CertificateDestinationNo", field: "CertificateDestinationNo", editor: "input" },
-                    { title: "CertificateProductProcessed", field: "CertificateProductProcessed", editor: "input" },
-                    { title: "CertComments", field: "CertComments", editor: "input" },
+                    { title: "Other Charges Due", field: "OtherChargesDue", editor: "input" },
+                    { title: "Other Fees Paid", field: "OtherFeesPaid", editor: "input" },
+                    { title: "Species Type", field: "SpeciesType", editor: "input" },
+                    { title: "Destination", field: "CertificateDestinationNo", editor: "input" },
+                    { title: "Product Processed", field: "CertificateProductProcessed", editor: "input" },
+                    { title: "Comments", field: "CertComments", editor: "input" },
                     { title: "FirewoodAreaCut", field: "FirewoodAreaCut", editor: "input" },
-                    { title: "certcommentsonstateme", field: "certcommentsonstateme", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
-                    { title: "certcommentsonreport", field: "certcommentsonreport", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
-                    { title: "CVNumber", field: "CVNumber", editor: "input" },
-                    { title: "CVDate", field: "CVDate", editor: "input", formatter: "datetime" },
+                    { title: "Show Comments on Statement?", field: "certcommentsonstateme", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "Show Comments on Report?", field: "certcommentsonreport", editor: "input", editor: true, formatter: "tickCross", formatterParams: { allowEmpty: false } },
+                    { title: "CV Number", field: "CVNumber", editor: "input" },
+                    { title: "CV Date", field: "CVDate", editor: "input", formatter: "datetime" },
                     { title: "F_Complete", field: "F_Complete", editor: "input" },
                     { title: "FundAcct", field: "FundAcct", editor: "input" },
-                    { title: "LoadBookNo", field: "LoadBookNo", editor: "input" },
-                    { title: "LoadTicketNo", field: "LoadTicketNo", editor: "input" },
                     { title: "OBJECTID", field: "OBJECTID", editor: "input", visible: false }
 
                 ]
@@ -533,26 +617,316 @@
                     },
                     body: formData.toString()
                 }).then(function (response) {
-                        const success = response.data.updateResults[0];
-                        const submitButton = document.getElementById('submitButton');  // Selecting the button
+                    const success = response.data.updateResults[0];
+                    const submitButton = document.getElementById('submitButton');  // Selecting the button
 
-                        if (success) {
-                            submitButton.value = 'SUCCESS!';
-                        } else {
-                            submitButton.value = 'FAILED!';
-                        }
+                    if (success) {
+                        submitButton.value = 'SUCCESS!';
+                    } else {
+                        submitButton.value = 'FAILED!';
+                    }
 
-                        setTimeout(() => {
-                            submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
-                        }, 3000);
+                    setTimeout(() => {
+                        submitButton.value = 'Submit Edits'; // clear the message after 3 seconds
+                    }, 3000);
                 });
             }
 
 
         });
-        document.getElementById("download-csv").addEventListener("click", function(){
-    table.download("csv", "Signers.csv");
-});
+    document.getElementById("download-csv").addEventListener("click", function () {
+        table.download("csv", "Signers.csv");
+    });
+
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+        const companyParsers = {
+            'pacific-rim': parsePacificRimPDF,
+            'northwest': parseNorthwestPDF,
+            'columbia': parseColumbiaPDF
+            // ... add more company parsers as needed ...
+        };
+
+        // Function to handle dropdown item clicks
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const companyName = this.dataset.company;
+                if (companyName && companyParsers[companyName]) {
+                    currentParser = companyParsers[companyName];
+                    document.getElementById('pdf-input').click();
+                } else {
+                    console.error('Parser for the selected company is not defined.');
+                }
+            });
+        });
+
+        let currentParser = null;
+
+        document.getElementById('pdf-input').addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                // Read the PDF file as an ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+
+                // Loading the PDF document from the ArrayBuffer
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+                // // Fetching the first page
+                const page = await pdf.getPage(1);
+
+
+                const textContent = await page.getTextContent();
+                const textItems = textContent.items.map(item => item.str).join(' ');
+
+
+
+                if (currentParser) {
+                    currentParser(textItems);
+                } else {
+                    console.error('No parser function is selected.');
+                }
+            }
+            // ... [rest of your event listener remains the same] ...
+        });
+    });
+
+    document.getElementById('pdfSubmitBtn').addEventListener('click', function () {
+        var currentTableData = table2.getData();
+        yourFunction(currentTableData);
+
+        // Hide the modal
+        var modal = bootstrap.Modal.getInstance(document.getElementById('dataModal'));
+        modal.hide();
+    });
+
+    function parsePacificRimPDF(text) {
+        const results = []
+        console.log('Pacific Rim')
+        // Extract the date
+        const dateRegex = /\d{1,2}\/\d{1,2}\/\d{4}/g;
+        const dates = text.match(dateRegex);
+
+        // Extract the certificate numbers
+        const certificateRegex = /Bureau Number (\d+)/g;
+        const certificates = [];
+        let match;
+        while ((match = certificateRegex.exec(text)) !== null) {
+            certificates.push(match[1]);
+        }
+
+        // Extract the species
+        const speciesRegex = /Logs Species Grade\s+([\w\s]+)-/g;
+
+        const species = [];
+        while ((match = speciesRegex.exec(text)) !== null) {
+            species.push(match[1].trim());
+        }
+        const unwantedString = "Gross   Net   Gross Utility Net Utility Gross Cubic Net Merch Cubic Net Chips Cubic";
+        const cleanedSpecies = species[0].replace(unwantedString, '').trim();
+
+
+        results.push({
+            date: dates[0],
+            certificateNumbers: certificates[0],
+            species: cleanedSpecies
+        });
+
+        // Step 1: Identify the Start and End of the Table
+        const tableStart = text.indexOf("Yard Receipt");
+        const tableEnd = text.search(/\d+\s+Loads/);
+
+        // Check if the table markers were found
+        if (tableStart === -1 || tableEnd === -1) {
+            return "Table markers not found";
+        }
+
+        // Step 2: Extract the Table Text
+        const tableText = text.substring(tableStart, tableEnd);
+
+        // Step 3: Parse the Rows and Columns
+        const rows = tableText.split('\n');
+        var tableData = rows.map(row => {
+            // Replace multiple spaces with a single space and then split by space
+            return row.replace(/\s+/g, ' ').trim().split(' ');
+        });
+        //remove first 2 items from array
+        const CleanTableData = tableData[0];
+        CleanTableData.shift();
+        CleanTableData.shift();
+        const CleanTableDataLength = CleanTableData.length;
+        var numToSplit = 5
+
+        if (CleanTableDataLength >= 10 && CleanTableDataLength <= 12) {
+            numToSplit = 1;
+        } else if (CleanTableDataLength >= 21 && CleanTableDataLength <= 24) {
+            numToSplit = 2;
+        } else if (CleanTableDataLength >= 30 && CleanTableDataLength <= 35) {
+            numToSplit = 3;
+        } else if (CleanTableDataLength >= 40 && CleanTableDataLength <= 45) {
+            numToSplit = 4;
+        }
+
+        const chunkSize = Math.ceil(CleanTableData.length / numToSplit);
+        const splitResult = [];
+
+        for (let i = 0; i < numToSplit; i++) {
+            const start = i * chunkSize;
+            const end = start + chunkSize;
+            splitResult.push(CleanTableData.slice(start, end));
+        }
+
+        console.log(splitResult)
+        var newTableData = splitResult.map((item) => {
+            return {
+                certificate_no: results[0].certificateNumbers,
+                species: results[0].species.replace('Doug Fir', 'Douglas Fir'),
+                date: results[0].date,
+                product: 'Lumber',
+                Book_No: item[1].substring(0, 4),
+                Ticket_No: item[1].slice(-2),
+                Sawmill: item[3],
+                Utility: item[4],
+            };
+        });
+
+        console.log(newTableData)
+        table2.setData(newTableData);
+
+        // Show the modal
+        var modal = new bootstrap.Modal(document.getElementById('dataModal'), {});
+        modal.show();
+    }
+
+    function parseNorthwestPDF(text) {
+        text = text.replace(/\s*-\s*/g, '-');
+        console.log('Northwest')
+        const tableDataStart = text.indexOf('Net   Net   Weight  ') + 'Net   Net   Weight  '.length;
+        const tableDataEnd = text.indexOf(' Total   All   Loads');
+        const tableData = text.slice(tableDataStart, tableDataEnd).trim();
+        const match = text.match(/Certificate:\s*(\S+)/);
+        // 2. Split the data into rows
+        const rows = tableData.split('\n').map(row => row.trim());
+
+        // 3. Split the rows into columns and clean up the data
+        const parsedTableData = rows.map(row => {
+            const columns = row.split(/\s+/).map(column => {
+                // Convert to number if possible
+                if (!isNaN(column.replace(',', ''))) {
+                    return parseFloat(column.replace(',', ''));
+                }
+                return column;
+            });
+            return columns;
+        });
+        const CleanTableData = parsedTableData[0];
+
+
+        let numToSplit = 0;
+
+        for (const item of CleanTableData) {
+            if (typeof item === 'string') {
+                numToSplit++;
+            }
+        }
+        const CleanTableDataLength = CleanTableData.length;
+
+        const chunkSize = Math.ceil(CleanTableDataLength / numToSplit);
+
+        console.log(chunkSize, CleanTableDataLength.length, numToSplit)
+        const splitResult = [];
+
+        for (let i = 0; i < numToSplit; i++) {
+            const start = i * chunkSize;
+            const end = start + chunkSize;
+            splitResult.push(CleanTableData.slice(start, end));
+        }
+        console.log(splitResult)
+        var newTableData = splitResult.map((item) => {
+            return {
+                certificate_no: match[1],
+                species: 'Douglas Fir',
+                date: item[3],
+                product: 'Lumber',
+                Book_No: item[2].toString().substring(0, 4),
+                Ticket_No: item[2].toString().slice(-2),
+                Sawmill: item[6],
+                Utility: item[7],
+            };
+        });
+        console.log(newTableData)
+        // Set the data for the table
+        table2.setData(newTableData);
+
+        // Show the modal
+        var modal = new bootstrap.Modal(document.getElementById('dataModal'), {});
+        modal.show();
+    }
+
+    function parseColumbiaPDF(text) {
+        console.log(text)
+        var CleanTableData
+        var numToSplit = 1
+        const regexl = /TOTAL[^\d]*([\d,]+)\s*LOADS/i;
+        const matchl = text.match(regexl);
+        if (matchl && matchl[1]) {
+            numToSplit = parseInt(matchl[1].replace(/,/g, ''), 10);
+        }
+
+
+        const regex = /ISSUED   BUREAU   PAGE [^\d]*(\d{2}\/\d{2}\/\d{4})/;
+        const match = text.match(regex);
+
+        const regex2 = /LOGS[^\d]+(\d{5}[^\-]+-{10})/s;
+        const match2 = text.match(regex2);
+        if (match2 && match2[1]) {
+            // Cleaning the data
+            CleanTableData = match2[1].trim().split(/\s+/);
+        }
+        CleanTableData.shift();
+        CleanTableData.shift();
+        CleanTableData.shift();
+        CleanTableData.pop();
+
+        const CleanTableDataLength = CleanTableData.length;
+
+        const chunkSize = Math.ceil(CleanTableDataLength / numToSplit);
+
+        console.log(chunkSize, CleanTableDataLength.length, numToSplit)
+        const splitResult = [];
+
+        for (let i = 0; i < numToSplit; i++) {
+            const start = i * chunkSize;
+            const end = start + chunkSize;
+            splitResult.push(CleanTableData.slice(start, end));
+        }
+        console.log(splitResult)
+
+        var newTableData = splitResult.map((item) => {
+            return {
+                certificate_no: item[0],
+                species: 'Douglas Fir',
+                date: match[1],
+                product: 'Lumber',
+                Book_No: item[1].substring(0, 4),
+                Ticket_No: item[1].slice(-2),
+                Sawmill: item[5]
+            };
+        });
+        console.log(newTableData)
+        // Set the data for the table
+        table2.setData(newTableData);
+
+        // Show the modal
+        var modal = new bootstrap.Modal(document.getElementById('dataModal'), {});
+        modal.show();
+
+    }
+
 </script>
 
 </html>
